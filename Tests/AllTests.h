@@ -1,6 +1,7 @@
 #pragma once
 #include "PawnTest.h"
 #include "RookTest.h"
+#include "BishopTest.h"
 #include <iostream>
 
 class AllTests{
@@ -13,6 +14,10 @@ class AllTests{
         // Run Rook tests
         RookTest rookTest;
         rookTest.runAllTests();
+
+        // Run Bishop tests
+        BishopTest bishopTest;
+        bishopTest.runAllTests();
 
         cout<<"All tests done"<<endl;
     }

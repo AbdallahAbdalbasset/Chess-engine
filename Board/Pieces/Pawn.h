@@ -7,19 +7,23 @@
 using namespace std;
 
 class Pawn : public Piece{
-    void prepareMoves(Board& board) {
-        if(color == Color::WHITE){
-            if(Helper::isEmptySquare(board, position.first, position.second + 1)){
-                moves.push_back({position.first, position.second + 1});
-            }
-
-            if(Helper::haveOpponentPiece(board, color, position.first + 1, position.second + 1)){
-                moves.push_back({position.first + 1, position.second + 1});
-            }
-
-            if(Helper::haveOpponentPiece(board, color, position.first - 1, position.second + 1)){
-                moves.push_back({position.first - 1, position.second + 1});
-            }
-        }
-    }
+    public:
+    void prepareMoves(Board&);
 };
+
+void Pawn::prepareMoves(Board& board){
+    int increment = (color == Color::WHITE) ? 1 : -1;
+        
+    // Forward move
+    if(Helper::isEmptySquare(board, position.first, position.second + increment)){
+        moves.push_back({position.first, position.second + increment});
+    }
+    // Takes a piece
+    if(Helper::haveOpponentPiece(board, color, position.first + 1, position.second + increment)){
+        moves.push_back({position.first + 1, position.second + increment});
+    }
+    // Takes a piece
+    if(Helper::haveOpponentPiece(board, color, position.first - 1, position.second + increment)){
+        moves.push_back({position.first - 1, position.second + increment});
+    }
+}

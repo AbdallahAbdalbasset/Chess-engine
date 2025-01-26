@@ -7,10 +7,10 @@ using namespace std;
 class Board{
     public:
     const int boardSize = 8;
-    vector<vector<Piece> >* board;
+    vector<vector<Piece*> > board;
     vector<vector<pair<int, int> > > lastMove;
 
-    Board();
+    Board():board(vector<vector<Piece*> >(8, vector<Piece*>(8, nullptr))){}
     void initializeBoard();
     void printBoard();
     void playMove();

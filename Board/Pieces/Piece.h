@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include "../../Helper/enum.h"
-#include "../Board.h"
+class Board;
 
 using namespace std;
 class Piece {
@@ -12,6 +12,6 @@ class Piece {
     Color color;
     vector<pair<int, int> > moves;
 
-    virtual void prepareMoves(Board&) = 0;
+    virtual void prepareMoves(Board&)=0;
 
 };

@@ -5,7 +5,7 @@
 #include "Helper/enum.h"
 #include "Tests/PawnTest.h"
 #include "Tests/AllTests.h"
-# include <iostream>
+#include <iostream>
 using namespace std;
 
 int main(){

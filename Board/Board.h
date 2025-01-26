@@ -16,3 +16,7 @@ class Board{
     void playMove();
 
 };
+
+void Board::initializeBoard(){}
+void Board::playMove(){}
+void Board::printBoard(){}

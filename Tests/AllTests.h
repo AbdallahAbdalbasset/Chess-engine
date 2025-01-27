@@ -2,6 +2,9 @@
 #include "PawnTest.h"
 #include "RookTest.h"
 #include "BishopTest.h"
+#include "QueenTest.h"
+#include "KnightTest.h"
+#include "KingTest.h"
 #include <iostream>
 
 class AllTests{
@@ -19,6 +22,18 @@ class AllTests{
         BishopTest bishopTest;
         bishopTest.runAllTests();
 
+        // Run Queen tests
+        QueenTest queenTest;
+        queenTest.runAllTests();
+
+        // Run Knight tests
+        KnightTest knightTest;
+        knightTest.runAllTests();
+
+        // Run King tests
+        KingTest kingTest;
+        kingTest.runAllTests();
+        
         cout<<"All tests done"<<endl;
     }
 };

@@ -10,5 +10,6 @@ int main(){
     Board board;
     board.initializeBoard();
     board.printBoard();
+    
     return 0;
 }

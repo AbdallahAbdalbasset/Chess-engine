@@ -1,5 +1,6 @@
 #pragma once
-#include <iostream>
+#include<iostream>
+#include<vector>
 #include "../../../Helper/enum.h"
 using namespace std;
 

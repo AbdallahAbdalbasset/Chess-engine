@@ -1,15 +1,7 @@
 #pragma once
-#include <iostream>
-#include "Piece.h"
-#include "../Board.h"
-#include "../../Helper/Helper.h"
-
-using namespace std;
-
-class Pawn : public Piece{
-    public:
-    void prepareMoves(Board&);
-};
+#include "../Headers/Pawn.h"
+#include "../../Board.h"
+#include "../../../Helper/Helper.h"
 
 void Pawn::prepareMoves(Board& board){
     int increment = (color == Color::WHITE) ? 1 : -1;

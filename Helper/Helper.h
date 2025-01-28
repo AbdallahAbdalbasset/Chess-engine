@@ -1,5 +1,5 @@
 #pragma once
-#include "../Board/Board.h"
+#include  "../Board/Board.h"
 #include "enum.h"
 
 class Helper{

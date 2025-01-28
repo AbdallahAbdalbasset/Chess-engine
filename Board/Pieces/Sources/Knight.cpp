@@ -1,14 +1,7 @@
 #pragma once
-#include <iostream>
-#include "Piece.h"
-#include "../Board.h"
-#include "../../Helper/Helper.h"
-
-class Knight : public Piece {
-    public:
-    void prepareMoves(Board&);
-};
-
+#include "../Headers/Knight.h"
+#include "../../Board.h"
+#include "../../../Helper/Helper.h"
 void Knight::prepareMoves(Board& board){
     int i = position.first;
     int j = position.second;

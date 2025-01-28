@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
-#include "../../Helper/enum.h"
-class Board;
-
+#include "../../../Helper/enum.h"
 using namespace std;
+
+class Board;
 class Piece {
     public:
     string name;

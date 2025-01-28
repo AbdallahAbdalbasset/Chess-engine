@@ -1,13 +1,7 @@
 #pragma once
-#include <iostream>
-#include "Piece.h"
-#include "../Board.h"
-#include "../../Helper/Helper.h"
-
-class King : public Piece {
-    public:
-    void prepareMoves(Board&);
-};
+#include "../Headers/King.h"
+#include "../../Board.h"
+#include "../../../Helper/Helper.h"
 
 void King::prepareMoves(Board& board){
 

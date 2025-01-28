@@ -1,15 +1,9 @@
 #pragma once
-#include "Piece.h"
-#include "../Board.h"
-#include "../../Helper/Helper.h"
-#include "Rook.h"
-#include "Bishop.h"
-
-
-class Queen : public Piece {
-    public:
-    void prepareMoves(Board&);
-};
+#include  "../Headers/Queen.h"
+#include "../../Board.h"
+#include "../../../Helper/Helper.h"
+#include "Rook.cpp"
+#include "Bishop.cpp"
 
 void Queen::prepareMoves(Board& board){
     Rook rook;
@@ -19,7 +13,7 @@ void Queen::prepareMoves(Board& board){
     bishop.position = position;
     rook.color = color;
     bishop.color = color;
-    
+
     rook.prepareMoves(board);
     bishop.prepareMoves(board);
 

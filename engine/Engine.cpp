@@ -9,12 +9,11 @@ pair<pair<int,int>,pair<pair<int,int>,int>> Engine::getMove(Board board, Color c
 
     if(depth == 2){
         int score = getScore(board);
-        return {{}, {{}, score}};
+        return {{-1,-1}, {{-1, -1}, score}};
     }
 
-    pair<pair<int, int>, pair<pair<int, int>, int>> ret;
+    pair<pair<int, int>, pair<pair<int, int>, int>> ret = {{-1,-1}, {{-1, -1}, 1e5}};
     if(color == Color::WHITE) ret.second.second = -1e5;
-    else ret.second.second = 1e5;
 
     for(int row=0;row<8;row++) {
         for(int col=0;col<8;col++) {
@@ -35,6 +34,7 @@ pair<pair<int,int>,pair<pair<int,int>,int>> Engine::getMove(Board board, Color c
                 // Recursively call getMove for the opponent's turn
                 auto tempRes = getMove(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE, depth + 1);
                 
+
                 if(color == Color::WHITE){
                     if(tempRes.second.second > ret.second.second) {
                         ret = tempRes;
@@ -47,6 +47,11 @@ pair<pair<int,int>,pair<pair<int,int>,int>> Engine::getMove(Board board, Color c
                         ret.first = {row, col};
                         ret.second.first = newPositoin;
                     }
+                }
+
+                if(ret.first.first == -1){
+                    ret.first = {row, col};
+                    ret.second.first = newPositoin;
                 }
 
                 board.board[row][col] = board.board[newPositoin.first][newPositoin.second];

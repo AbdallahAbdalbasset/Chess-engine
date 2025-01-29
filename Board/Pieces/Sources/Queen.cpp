@@ -6,6 +6,7 @@
 #include "Bishop.cpp"
 
 void Queen::prepareMoves(Board& board){
+    moves.clear();
     Rook rook;
     Bishop bishop;
     

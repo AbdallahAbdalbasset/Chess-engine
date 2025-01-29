@@ -68,11 +68,11 @@ King* createKing(Color color, pair<int, int> position){
 
 
 void Board::initializeBoard(){
-    for(int i=0; i<boardSize; i++){
+    for(int i=0; i<8; i++){
         board[i][1] = createPawn(WHITE, {i, 1});
     }
 
-    for(int i=0; i<boardSize; i++){
+    for(int i=0; i<8; i++){
         board[i][6] = createPawn(BLACK, {i, 6});
     }
 
@@ -113,5 +113,15 @@ void Board::printBoard(){
                 cout << setw(6) << left << "--";
         }
         cout<<endl<<endl;
+    }
+}
+
+void Board::prepareMoves(){
+    for(int i=0; i<8; i++){
+        for(int j=0; j<8; j++){
+            if(board[i][j]!=nullptr){
+                board[i][j]->prepareMoves(*this);
+            }
+        }
     }
 }

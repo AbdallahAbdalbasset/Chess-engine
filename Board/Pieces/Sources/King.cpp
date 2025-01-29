@@ -4,7 +4,7 @@
 #include "../../../Helper/Helper.h"
 
 void King::prepareMoves(Board& board){
-
+    moves.clear();
     for(int i = position.first - 1;i <= position.first + 1; i++){
         for(int j = position.second - 1; j <= position.second + 1; j++){
             if(i==position.first&&j==position.second) continue;

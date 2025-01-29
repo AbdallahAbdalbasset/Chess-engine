@@ -13,5 +13,6 @@ class Board{
     Board();
     void initializeBoard();
     void printBoard();
+    void prepareMoves();
 };
 

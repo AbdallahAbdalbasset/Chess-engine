@@ -4,6 +4,7 @@
 #include "../../../Helper/Helper.h"
 
 void Rook::prepareMoves(Board& board){
+    moves.clear();
     int i = position.first;
     int j = position.second;
     

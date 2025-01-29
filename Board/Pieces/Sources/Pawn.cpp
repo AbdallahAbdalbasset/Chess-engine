@@ -4,6 +4,7 @@
 #include "../../../Helper/Helper.h"
 
 void Pawn::prepareMoves(Board& board){
+    moves.clear();
     int increment = (color == Color::WHITE) ? 1 : -1;
         
     // Forward move

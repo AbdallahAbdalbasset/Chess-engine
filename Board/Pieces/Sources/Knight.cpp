@@ -3,6 +3,7 @@
 #include "../../Board.h"
 #include "../../../Helper/Helper.h"
 void Knight::prepareMoves(Board& board){
+    moves.clear();
     int i = position.first;
     int j = position.second;
 

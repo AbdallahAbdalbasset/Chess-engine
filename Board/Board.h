@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+
 using namespace std;
 
 
@@ -12,5 +13,6 @@ class Board{
     Board();
     void initializeBoard();
     void printBoard();
+    void prepareMoves();
 };
 

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "../Headers/Rook.h"
 #include "../../Board.h"
 #include "../../../Helper/Helper.h"
@@ -12,7 +13,7 @@ void Rook::prepareMoves(Board& board){
     while(Helper::isEmptySquare(board, i-1, j)){
         moves.push_back({--i, j});
     }
-    if(Helper::haveOpponentPiece(board, color, i-1, j)){
+    if(Helper::isInBoard(i-1, j)){
         moves.push_back({--i, j});
     }
     
@@ -22,7 +23,7 @@ void Rook::prepareMoves(Board& board){
     while(Helper::isEmptySquare(board, i+1, j)){
         moves.push_back({++i, j});
     }
-    if(Helper::haveOpponentPiece(board, color, i+1, j)){
+    if(Helper::isInBoard(i+1, j)){
         moves.push_back({++i, j});
     }
 
@@ -32,7 +33,7 @@ void Rook::prepareMoves(Board& board){
     while(Helper::isEmptySquare(board, i, j-1)){
         moves.push_back({i, --j});
     }
-    if(Helper::haveOpponentPiece(board, color, i, j-1)){
+    if(Helper::isInBoard(i, j-1)){
         moves.push_back({i, --j});
     }
 
@@ -42,7 +43,7 @@ void Rook::prepareMoves(Board& board){
     while(Helper::isEmptySquare(board, i, j+1)){
         moves.push_back({i, ++j});
     }
-    if(Helper::haveOpponentPiece(board, color, i, j+1)){
+    if(Helper::isInBoard(i, j+1)){
         moves.push_back({i, ++j});
     }
 }

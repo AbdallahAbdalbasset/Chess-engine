@@ -1,6 +1,6 @@
 #pragma once
-#include "../Board/Pieces/Sources/Queen.cpp"
-#include "../Board/Board.cpp"
+#include "../Board/Pieces/Headers/Queen.h"
+#include "../Board/Board.h"
 #include "../Helper/enum.h"
 
 class QueenTest {

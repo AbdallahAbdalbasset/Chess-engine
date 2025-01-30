@@ -1,5 +1,4 @@
-#pragma once
-#include "../Board/Board.cpp"
+#include "../Board/Board.h"
 #include "Engine.h"
 #include "../Helper/Helper.h"
 #include <iostream>
@@ -7,7 +6,15 @@ using namespace std;
 
 pair<pair<int,int>,pair<pair<int,int>,int>> Engine::getMove(Board board, Color color, int depth){
 
-    if(depth == 2){
+    if(Helper::isCheck(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE)){
+        return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? 1e6 : -1e6}};
+    }
+
+    if(Helper::isCheckMate(board, color)){
+        return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? (-1e9)+depth : 1e9-depth}};
+    }
+    
+    if(depth == 1){
         int score = getScore(board);
         return {{-1,-1}, {{-1, -1}, score}};
     }
@@ -22,13 +29,20 @@ pair<pair<int,int>,pair<pair<int,int>,int>> Engine::getMove(Board board, Color c
 
             auto moves = board.board[row][col]->moves;
 
-            for(pair<int, int> newPositoin:moves) {
+            for(pair<int, int> newPosition:moves) {
+                // We chould not take our own pieces
+                if(board.board[newPosition.first][newPosition.second]!=nullptr
+                && board.board[newPosition.first][newPosition.second]->color == color)continue;
+                // We chould not take the king
+                if(board.board[newPosition.first][newPosition.second]!=nullptr
+                && board.board[newPosition.first][newPosition.second]->name == "K")continue;
+
                 // Try this move
-                Piece* targetPiece = board.board[newPositoin.first][newPositoin.second];
-                board.board[newPositoin.first][newPositoin.second] = board.board[row][col];
+                Piece* targetPiece = board.board[newPosition.first][newPosition.second];
+                board.board[newPosition.first][newPosition.second] = board.board[row][col];
                 board.board[row][col] = nullptr;
 
-                board.board[newPositoin.first][newPositoin.second]->position = newPositoin;
+                board.board[newPosition.first][newPosition.second]->position = newPosition;
                 board.prepareMoves();
 
                 // Recursively call getMove for the opponent's turn
@@ -36,26 +50,26 @@ pair<pair<int,int>,pair<pair<int,int>,int>> Engine::getMove(Board board, Color c
                 
 
                 if(color == Color::WHITE){
-                    if(tempRes.second.second > ret.second.second) {
+                    if(tempRes.second.second >= ret.second.second) {
                         ret = tempRes;
                         ret.first = {row, col};
-                        ret.second.first = newPositoin;
+                        ret.second.first = newPosition;
                     }
                 }else {
-                    if(tempRes.second.second < ret.second.second) {
+                    if(tempRes.second.second <= ret.second.second) {
                         ret = tempRes;
                         ret.first = {row, col};
-                        ret.second.first = newPositoin;
+                        ret.second.first = newPosition;
                     }
                 }
 
                 if(ret.first.first == -1){
                     ret.first = {row, col};
-                    ret.second.first = newPositoin;
+                    ret.second.first = newPosition;
                 }
 
-                board.board[row][col] = board.board[newPositoin.first][newPositoin.second];
-                board.board[newPositoin.first][newPositoin.second] = targetPiece;
+                board.board[row][col] = board.board[newPosition.first][newPosition.second];
+                board.board[newPosition.first][newPosition.second] = targetPiece;
 
                 board.board[row][col]->position = {row, col};
                 board.prepareMoves();

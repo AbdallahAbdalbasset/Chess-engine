@@ -1,6 +1,6 @@
 #pragma once
-#include "../Board/Pieces/Sources/King.cpp"
-#include "../Board/Board.cpp"
+#include "../Board/Pieces/Headers/King.h"
+#include "../Board/Board.h"
 #include "../Helper/enum.h"
 #include <iostream>
 

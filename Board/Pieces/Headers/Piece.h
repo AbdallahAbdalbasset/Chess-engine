@@ -12,7 +12,5 @@ class Piece {
     int value;
     Color color;
     vector<pair<int, int> > moves;
-
     virtual void prepareMoves(Board&)=0;
-
 };

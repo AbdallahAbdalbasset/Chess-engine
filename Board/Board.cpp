@@ -1,5 +1,6 @@
 #pragma once
 #include "Board.h"
+#include "Pieces/Headers/Piece.h"
 #include "Pieces/Headers/Pawn.h"
 #include "Pieces/Headers/Rook.h"
 #include "Pieces/Headers/Knight.h"
@@ -8,12 +9,14 @@
 #include "Pieces/Headers/King.h"
 #include <iomanip>
 #include <iostream>
+#include <set>
+#include <vector>
 
 using namespace std;
 Board::Board():board(vector<vector<Piece*> >(8, vector<Piece*>(8, nullptr))){}
 
-Pawn* createPawn(Color color, pair<int, int> position){
-    Pawn* pawn = new Pawn();
+Piece* createPawn(Color color, pair<int, int> position){
+    Piece* pawn = new Pawn;
     pawn->position = position;
     pawn->name = "P";
     pawn->value = 1;
@@ -21,8 +24,8 @@ Pawn* createPawn(Color color, pair<int, int> position){
     return pawn;
 }  
 
-Rook* createRook(Color color, pair<int, int> position){
-    Rook* rook = new Rook();
+Piece* createRook(Color color, pair<int, int> position){
+    Piece* rook = new Rook;
     rook->position = position;
     rook->name = "R";
     rook->value = 5;
@@ -30,8 +33,8 @@ Rook* createRook(Color color, pair<int, int> position){
     return rook;
 }
 
-Knight* createKnight(Color color, pair<int, int> position){
-    Knight* knight = new Knight();
+Piece* createKnight(Color color, pair<int, int> position){
+    Piece* knight = new Knight;
     knight->position = position;
     knight->name = "N";
     knight->value = 3;
@@ -39,8 +42,8 @@ Knight* createKnight(Color color, pair<int, int> position){
     return knight;
 }
 
-Bishop* createBishop(Color color, pair<int, int> position){
-    Bishop* bishop = new Bishop();
+Piece* createBishop(Color color, pair<int, int> position){
+    Piece* bishop = new Bishop;
     bishop->position = position;
     bishop->name = "B";
     bishop->value = 3;
@@ -48,8 +51,8 @@ Bishop* createBishop(Color color, pair<int, int> position){
     return bishop;
 }
 
-Queen* createQueen(Color color, pair<int, int> position){
-    Queen* queen = new Queen();
+Piece* createQueen(Color color, pair<int, int> position){
+    Piece* queen = new Queen;
     queen->position = position;
     queen->name = "Q";
     queen->value = 9;
@@ -57,8 +60,8 @@ Queen* createQueen(Color color, pair<int, int> position){
     return queen;
 }
 
-King* createKing(Color color, pair<int, int> position){
-    King* king = new King();
+Piece* createKing(Color color, pair<int, int> position){
+    Piece* king = new King();
     king->position = position;
     king->name = "K";
     king->value = 0;
@@ -103,8 +106,15 @@ void Board::initializeBoard(){
     board[4][7] = createKing(BLACK, {4, 7});
 }
 void Board::printBoard(){
+    system("clear");
     cout<<endl<<endl;
+
+    cout<<setw(6)<<left<<"";
+    for(int i = 0; i < boardSize; i++)cout<<setw(6)<<left<<i;cout<<endl;
+    cout<<endl;
+
     for(int i = boardSize - 1;i >= 0; i--){
+        cout<<setw(6)<<i<<left;
         for(int j = 0;j < boardSize; j++){
             if(board[j][i]!=nullptr){
                 string out = ((board[j][i]->color == Color::WHITE) ?  "W" : "B") + board[j][i]->name;
@@ -112,16 +122,41 @@ void Board::printBoard(){
             }else
                 cout << setw(6) << left << "--";
         }
-        cout<<endl<<endl;
+        cout<<setw(6)<<left<<i<<endl<<endl;
     }
+
+    cout<<setw(6)<<left<<"";
+    for(int i = 0; i < boardSize; i++)cout<<setw(6)<<left<<i;cout<<endl;
+
 }
 
 void Board::prepareMoves(){
+    vector<set<pair<int, int> > > allMoves(2);
+    vector<pair<int, int> > kingsPositions;
+
     for(int i=0; i<8; i++){
         for(int j=0; j<8; j++){
-            if(board[i][j]!=nullptr){
-                board[i][j]->prepareMoves(*this);
+            if(board[i][j]==nullptr) continue;
+
+            board[i][j]->prepareMoves(*this);
+            if(board[i][j]->name == "K"){
+                kingsPositions.push_back({i, j});
+            }
+            for(auto& move : board[i][j]->moves){
+                allMoves[board[i][j]->color == Color::WHITE ? 0 : 1].insert(move);
             }
         }
+    }
+
+    for(auto& kingPostion :  kingsPositions){
+        vector<pair<int, int> > kingMoves;
+
+        for(auto&  kingMove : board[kingPostion.first][kingPostion.second]->moves){
+            if(allMoves[board[kingPostion.first][kingPostion.second]->color == Color::WHITE? 1 : 0].find(kingMove)== allMoves[board[kingPostion.first][kingPostion.second]->color == Color::WHITE? 1 : 0].end()){
+                kingMoves.push_back(kingMove);
+            }
+        }
+
+        board[kingPostion.first][kingPostion.second]->moves = kingMoves;
     }
 }

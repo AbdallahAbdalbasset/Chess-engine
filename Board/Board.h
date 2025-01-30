@@ -1,8 +1,7 @@
 #pragma once
 #include <iostream>
-
+#include "Pieces/Headers/Piece.h"
 using namespace std;
-
 
 class Board{
     public:

@@ -1,9 +1,10 @@
 #pragma once
-#include  "../Headers/Queen.h"
+
+#include "../Headers/Queen.h"
 #include "../../Board.h"
 #include "../../../Helper/Helper.h"
-#include "Rook.cpp"
-#include "Bishop.cpp"
+#include "../Headers/Rook.h"
+#include "../Headers/Bishop.h"
 
 void Queen::prepareMoves(Board& board){
     moves.clear();

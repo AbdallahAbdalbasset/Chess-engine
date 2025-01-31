@@ -1,5 +1,3 @@
-#pragma once
-
 #include "../Headers/Queen.h"
 #include "../../Board.h"
 #include "../../../Helper/Helper.h"
@@ -23,4 +21,5 @@ void Queen::prepareMoves(Board& board){
         moves.push_back(move);
     for(auto move : bishop.moves)
         moves.push_back(move);
+
 }

@@ -1,4 +1,3 @@
-#pragma once
 
 #include "../Headers/Rook.h"
 #include "../../Board.h"

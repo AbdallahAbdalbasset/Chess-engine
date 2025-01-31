@@ -1,4 +1,3 @@
-#pragma once
 
 #include "../Headers/Knight.h"
 #include "../../Board.h"

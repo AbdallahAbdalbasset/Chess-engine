@@ -2,19 +2,20 @@
 #include "Engine.h"
 #include "../Helper/Helper.h"
 #include <iostream>
+
 using namespace std;
 
 pair<pair<int,int>,pair<pair<int,int>,int>> Engine::getMove(Board board, Color color, int depth){
 
     if(Helper::isCheck(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE)){
-        return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? 1e6 : -1e6}};
+        return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? 2e9 : -2e9}};
     }
 
     if(Helper::isCheckMate(board, color)){
         return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? (-1e9)+depth : 1e9-depth}};
     }
     
-    if(depth == 1){
+    if(depth == 4){
         int score = getScore(board);
         return {{-1,-1}, {{-1, -1}, score}};
     }
@@ -33,6 +34,7 @@ pair<pair<int,int>,pair<pair<int,int>,int>> Engine::getMove(Board board, Color c
                 // We chould not take our own pieces
                 if(board.board[newPosition.first][newPosition.second]!=nullptr
                 && board.board[newPosition.first][newPosition.second]->color == color)continue;
+
                 // We chould not take the king
                 if(board.board[newPosition.first][newPosition.second]!=nullptr
                 && board.board[newPosition.first][newPosition.second]->name == "K")continue;
@@ -80,7 +82,6 @@ pair<pair<int,int>,pair<pair<int,int>,int>> Engine::getMove(Board board, Color c
     return ret;
 }
 
-    
 int Engine::getScore(Board &board){
     int score=0;
     for(int row=0;row<8;row++) {

@@ -1,4 +1,3 @@
-#pragma once
 #include "Board.h"
 #include "Pieces/Headers/Piece.h"
 #include "Pieces/Headers/Pawn.h"

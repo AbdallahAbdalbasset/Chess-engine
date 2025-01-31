@@ -2,7 +2,6 @@
 #include  "../Board/Board.h"
 #include "enum.h"
 
-
 class Helper{
     public:
     static bool isInBoard(int i, int j);

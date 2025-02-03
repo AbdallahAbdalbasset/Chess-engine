@@ -24,10 +24,12 @@ bool Helper::isCheck(Board& board, Color color){
         for(int col=0;col<8;col++) {
             if(board.board[row][col] == nullptr) continue;
             if(board.board[row][col]->color == color) continue;
+
             for(auto newPositoin:board.board[row][col]->moves){
                 if(!Helper::isInBoard(newPositoin.first, newPositoin.second))continue;
                 if(board.board[newPositoin.first][newPositoin.second] == nullptr) continue;
                 if(board.board[newPositoin.first][newPositoin.second]->color != color) continue;
+
                 if(board.board[newPositoin.first][newPositoin.second]->name=="K") return true;
             }
         }
@@ -83,10 +85,6 @@ bool Helper::isValidMove(Board board, pair<int, int> to, Color color){
     // We chould not take our own pieces
     if(board.board[to.first][to.second] != nullptr
     && board.board[to.first][to.second]->color == color)return false;
-
-    // We chould not take the king
-    if(board.board[to.first][to.second]!=nullptr
-    && board.board[to.first][to.second]->name == "K")return false;
-
+    
     return true;
 }

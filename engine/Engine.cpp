@@ -15,7 +15,7 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
         return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? INT_MIN+depth : INT_MAX-depth}};
     }
 
-    if(depth == 4){
+    if(depth == 6){
         int score = getScore(board);
         return {{-1, -1}, {{-1, -1}, score}};
     }
@@ -23,6 +23,7 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
     pair<pair<int, int>, pair<pair<int, int>, int>> ret = {{-1,-1}, {{-1, -1}, INT_MAX}};
     if(color == Color::WHITE) ret.second.second = INT_MIN;
 
+    bool isStaleMate = true;
     for(int row=0;row<8;row++) {
         for(int col=0;col<8;col++) {
             if(board.board[row][col] == nullptr) continue;
@@ -31,7 +32,7 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
             auto moves = board.board[row][col]->moves;
             for(pair<int, int> newPosition : moves) {
                 if(!Helper::isValidMove(board, newPosition, color)) continue;
-
+                isStaleMate = false;
                 // Try this move
                 Piece* targetPiece = board.board[newPosition.first][newPosition.second];
                 Helper::playMove(board, {row, col}, newPosition, nullptr);
@@ -47,7 +48,6 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
                         ret.second.first = newPosition;
                         alpha = max(alpha, ret.second.second);
                     }
-                    
                 }else {
                     if(tempRes.second.second < ret.second.second) {
                         ret = tempRes;
@@ -60,11 +60,12 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
                 // Undo this move
                 Helper::playMove(board, newPosition, {row, col}, targetPiece);
 
-                if(beta < alpha) return ret;
+                if(beta <= alpha) return ret;
             }
         }
     }
 
+    if(isStaleMate) return {{-1, -1}, {{-1, -1}, 0}};
     return ret;
 }
 

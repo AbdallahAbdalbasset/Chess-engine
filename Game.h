@@ -6,6 +6,7 @@
 #include "Board/Pieces/Headers/Queen.h"
 #include "Board/Pieces/Headers/Knight.h"
 #include "Board/Pieces/Headers/Pawn.h"
+#include "Helper/enum.h"
 #include <iostream>
 
 using namespace std;
@@ -16,7 +17,7 @@ class Game{
     void napilion(Board&);
     void twoRooksVsKing(Board&);
     void rookAndAQueen(Board&);
-    void knightAndTwoRooks(Board&);
+    void knightsAndTwoRooks(Board&);
     void initialBoard(Board&);
 };
 
@@ -24,9 +25,9 @@ void Game::initialBoard(Board& board){
     board.initializeBoard();
 }
 
-void Game::knightAndTwoRooks(Board& board){
+void Game::knightsAndTwoRooks(Board& board){
     board.board[0][0] = new King;
-    board.board[0][0]->color = Color::WHITE;
+    board.board[0][0]->color = Color::BLACK;
     board.board[0][0]->position = {0, 0};
     board.board[0][0]->name = "K";
 
@@ -42,17 +43,22 @@ void Game::knightAndTwoRooks(Board& board){
     board.board[2][6]->name = "N";
     board.board[2][6]->value = 3;
 
+    board.board[3][3] = new King;
+    board.board[3][3]->color = Color::WHITE;
+    board.board[3][3]->position = {3, 3};
+    board.board[3][3]->name = "K";
+
     board.board[6][2] = new Rook;
     board.board[6][2]->color = Color::WHITE;
     board.board[6][2]->position = {6, 2};
     board.board[6][2]->name = "R";
     board.board[6][2]->value = 5;
 
-    board.board[6][3] = new Rook;
-    board.board[6][3]->color = Color::WHITE;
-    board.board[6][3]->position = {6, 3};
-    board.board[6][3]->name = "R";
-    board.board[6][3]->value = 5;
+    board.board[5][3] = new Rook;
+    board.board[5][3]->color = Color::WHITE;
+    board.board[5][3]->position = {5, 3};
+    board.board[5][3]->name = "R";
+    board.board[5][3]->value = 5;
 
     board.board[6][4] = new Pawn;
     board.board[6][4]->color = Color::WHITE;
@@ -115,7 +121,7 @@ void Game::napilion(Board& board){
 
 void Game::startGame(){
     Board board;
-    twoRooksVsKing(board);
+    knightsAndTwoRooks(board);
 
     board.prepareMoves();
     board.printBoard();
@@ -135,13 +141,11 @@ void Game::startGame(){
                 cout<<"Calculating..."<<endl;
                 ret = Engine::getMove(board, Color::WHITE, 0, INT_MIN, INT_MAX);
 
-                if(ret.first.first == -1){cout<<"It is check mate stupid!"<<endl; continue;}
                 Helper::playMove(board, ret.first, ret.second.first, nullptr);
             }else if(c == 2){// black move
                 cout<<"Calculating..."<<endl;
                 ret = Engine::getMove(board, Color::BLACK, 0, INT_MIN, INT_MAX);
-                
-                if(ret.first.first == -1){cout<<"It is check mate stupid!"<<endl;continue;}
+
                 Helper::playMove(board, ret.first, ret.second.first, nullptr);
             }else{// Play a move manually
                 cin>>from.first>>from.second>>to.first>>to.second;
@@ -149,6 +153,10 @@ void Game::startGame(){
             }
             board.prepareMoves();
             board.printBoard();
+
+            if(ret.second.second == staleMate) cout<<"Stale Mate" << endl;
+            else if(ret.second.second > whiteMinCheckMate) cout << "White Win :)" << endl;
+            else if(ret.second.second < blackMinCheckMate) cout << "Black Win :(" << endl;
         }
     }
 }

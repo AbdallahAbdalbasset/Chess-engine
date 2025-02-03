@@ -7,19 +7,19 @@
 class RookTest{
     public:
     void runAllTests(){
-        noMoves();
+        twoMoves();
         emptyBoard();
         opponentPieceUp();
 
         cout<<"Rook tests done"<<endl;
     }
 
-    void noMoves();
+    void twoMoves();
     void emptyBoard();
     void opponentPieceUp();
 };
 
-void RookTest::noMoves(){
+void RookTest::twoMoves(){
     Board board;
     Rook rook;
     rook.position = {0, 0};
@@ -29,9 +29,16 @@ void RookTest::noMoves(){
     board.board[0][1]->color = Color::WHITE;
     board.board[1][0] = new Rook();
     board.board[1][0]->color = Color::WHITE;
-
     rook.prepareMoves(board);
-    assert(rook.moves.empty());
+
+    vector<pair<int, int>> correctMoves;
+    correctMoves.push_back({0, 1});
+    correctMoves.push_back({1, 0});
+
+    sort(correctMoves.begin(), correctMoves.end());
+    sort(rook.moves.begin(), rook.moves.end());
+
+    assert(rook.moves == correctMoves);
 }
 
 void RookTest::emptyBoard(){

@@ -1,6 +1,8 @@
 #include "Helper.h"
 #include "../Board/Board.h"
 #include <iostream>
+#include "../Board/Pieces/Headers/Piece.h"
+#include "enum.h"
 
 using namespace std;
 bool Helper::isInBoard(int i, int j){
@@ -45,32 +47,17 @@ bool Helper::isCheckMate(Board board, Color color){
             
             auto moves = board.board[row][col]->moves;
             for(pair<int, int> newPosition:moves) {
-                if(row==newPosition.first&&col==newPosition.second)continue;
 
-                if(!Helper::isInBoard(newPosition.first, newPosition.second))continue;
-                // We chould not take our own pieces
-                if(board.board[newPosition.first][newPosition.second]!=nullptr
-                && board.board[newPosition.first][newPosition.second]->color == color)continue;
-                // We chould not take the king
-                if(board.board[newPosition.first][newPosition.second]!=nullptr
-                && board.board[newPosition.first][newPosition.second]->name == "K")continue;
+                if(!isValidMove(board, newPosition, color))continue;
 
                 // Try this move
                 Piece* targetPiece = board.board[newPosition.first][newPosition.second];
-                board.board[newPosition.first][newPosition.second] = board.board[row][col];
-                board.board[row][col] = nullptr;
-
-                board.board[newPosition.first][newPosition.second]->position = newPosition;
-                board.prepareMoves();
+                playMove(board, {row, col}, newPosition, targetPiece);
 
                 if(!isCheck(board, color)) isNotcheckMate = true;
 
                 // Undo this move
-                board.board[row][col] = board.board[newPosition.first][newPosition.second];
-                board.board[newPosition.first][newPosition.second] = targetPiece;
-
-                board.board[row][col]->position = {row, col};
-                board.prepareMoves();
+                playMove(board, newPosition, {row, col}, targetPiece);
 
                 if(isNotcheckMate) return false;
             }
@@ -79,7 +66,7 @@ bool Helper::isCheckMate(Board board, Color color){
     return true;
 }
 
-void Helper::playMove(Board& board, pair<int, int> from, pair<int, int> to){    
+void Helper::playMove(Board& board, pair<int, int> from, pair<int, int> to, Piece* targetPiece){    
     assert(isInBoard(from.first, from.second));
     assert(isInBoard(to.first, to.second));
     assert(board.board[from.first][from.second]!=nullptr);
@@ -88,5 +75,18 @@ void Helper::playMove(Board& board, pair<int, int> from, pair<int, int> to){
     board.board[from.first][from.second] = nullptr;
 
     board.board[to.first][to.second]->position = to;
+    board.board[from.first][from.second] = targetPiece;
     board.prepareMoves();
+}
+
+bool Helper::isValidMove(Board board, pair<int, int> to, Color color){
+    // We chould not take our own pieces
+    if(board.board[to.first][to.second] != nullptr
+    && board.board[to.first][to.second]->color == color)return false;
+
+    // We chould not take the king
+    if(board.board[to.first][to.second]!=nullptr
+    && board.board[to.first][to.second]->name == "K")return false;
+
+    return true;
 }

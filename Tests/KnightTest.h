@@ -7,19 +7,19 @@
 class KnightTest {
     public:
     void runAllTests(){
-        noMoves();
+        twoMoves();
         emptyBoard();
         opponentPieceUpRight();
 
         cout<<"Knight tests done"<<endl;
     }
 
-    void noMoves();
+    void twoMoves();
     void emptyBoard();
     void opponentPieceUpRight();
 };
 
-void KnightTest::noMoves(){
+void KnightTest::twoMoves(){
     Board board;
     Knight knight;
     knight.position = {0, 0};
@@ -29,10 +29,16 @@ void KnightTest::noMoves(){
     board.board[1][2]->color = Color::WHITE;
     board.board[2][1] = new Knight();
     board.board[2][1]->color = Color::WHITE;
-
     knight.prepareMoves(board);
 
-    assert(knight.moves.empty());
+    vector<pair<int, int> > correctMoves;
+    correctMoves.push_back({1, 2});
+    correctMoves.push_back({2, 1});
+
+    sort(correctMoves.begin(), correctMoves.end());
+    sort(knight.moves.begin(), knight.moves.end());
+
+    assert(knight.moves == correctMoves);
 }
 
 void KnightTest::emptyBoard(){

@@ -7,19 +7,19 @@
 class KingTest {
     public:
     void runAllTests(){
-        noMoves();
+        threeMoves();
         emptyBoard();
         opponentPieceUpRight();
 
         cout<<"King tests done"<<endl;
     }
 
-    void noMoves();
+    void threeMoves();
     void emptyBoard();
     void opponentPieceUpRight();
 };
 
-void KingTest::noMoves(){
+void KingTest::threeMoves(){
     Board board;
     King king;
     king.position = {0, 0};
@@ -31,10 +31,17 @@ void KingTest::noMoves(){
     board.board[0][1]->color = Color::WHITE;
     board.board[1][0] = new King();
     board.board[1][0]->color = Color::WHITE;
-
     king.prepareMoves(board);
 
-    assert(king.moves.empty());
+    vector<pair<int, int> > correctMoves;
+    correctMoves.push_back({1, 1});
+    correctMoves.push_back({0, 1});
+    correctMoves.push_back({1, 0});
+
+    sort(correctMoves.begin(), correctMoves.end());
+    sort(king.moves.begin(), king.moves.end());
+
+    assert(king.moves == correctMoves);
 }
 
 

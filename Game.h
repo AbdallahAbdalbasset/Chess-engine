@@ -12,8 +12,8 @@ using namespace std;
 
 class Game{
     public:
-    void napilion(Board&);
     void startGame();
+    void napilion(Board&);
     void twoRooksVsKing(Board&);
     void rookAndAQueen(Board&);
     void knightAndTwoRooks(Board&);
@@ -115,7 +115,7 @@ void Game::napilion(Board& board){
 
 void Game::startGame(){
     Board board;
-    initialBoard(board);
+    twoRooksVsKing(board);
 
     board.prepareMoves();
     board.printBoard();
@@ -124,27 +124,28 @@ void Game::startGame(){
         int c;
         while(cin>>c){
             pair<int, int> from, to;
-            if(c == 0){
+            pair<pair<int, int>, pair<pair<int, int>, int>> ret;
+
+            if(c == 0){// Print valid moves for specific Piece
                 cin>>from.first>>from.second;
                 for(auto&i:board.board[from.first][from.second]->moves)
                     cout<<i.first<<i.second<<" ";cout<<endl;
-                    continue;
-            }else if(c == 1){
+                continue;
+            }else if(c == 1){// white move
                 cout<<"Calculating..."<<endl;
-                auto ret = Engine::getMove(board, Color::WHITE, 0);
-                if(ret.first.first == -1){cout<<"It is chemate stupid!"<<endl; continue;}
+                ret = Engine::getMove(board, Color::WHITE, 0, INT_MIN, INT_MAX);
+
+                if(ret.first.first == -1){cout<<"It is check mate stupid!"<<endl; continue;}
+                Helper::playMove(board, ret.first, ret.second.first, nullptr);
+            }else if(c == 2){// black move
+                cout<<"Calculating..."<<endl;
+                ret = Engine::getMove(board, Color::BLACK, 0, INT_MIN, INT_MAX);
                 
-                cout<<ret.first.first<<ret.first.second<<" "<<ret.second.first.first<<ret.second.first.second<<endl;
-                Helper::playMove(board, ret.first, ret.second.first);
-            }else if(c == 2){
-                cout<<"Calculating..."<<endl;
-                auto ret = Engine::getMove(board, Color::BLACK, 0);
-                if(ret.first.first == -1){cout<<"It is chemate stupid!"<<endl;continue;}
-                cout<<ret.first.first<<ret.first.second<<" "<<ret.second.first.first<<ret.second.first.second<<endl;
-                Helper::playMove(board, ret.first, ret.second.first);
-            }else{
+                if(ret.first.first == -1){cout<<"It is check mate stupid!"<<endl;continue;}
+                Helper::playMove(board, ret.first, ret.second.first, nullptr);
+            }else{// Play a move manually
                 cin>>from.first>>from.second>>to.first>>to.second;
-                Helper::playMove(board, from, to);
+                Helper::playMove(board, from, to, nullptr);
             }
             board.prepareMoves();
             board.printBoard();

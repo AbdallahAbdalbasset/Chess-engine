@@ -21,22 +21,35 @@ class PawnTest{
 void PawnTest::emptyBoardWhite(){
     Board board;
     Pawn pawn;
-    pawn.position = {1,2};
+    pawn.position = {1,1};
     pawn.color = Color::WHITE;
     pawn.prepareMoves(board);
+
     vector<pair<int, int> > correctMoves;
+    correctMoves.push_back({1, 2});
     correctMoves.push_back({1, 3});
+
+    sort(correctMoves.begin(), correctMoves.end());
+    sort(pawn.moves.begin(), pawn.moves.end());
+
     assert(pawn.moves == correctMoves);
 }
 
 void PawnTest::emptyBoardBlack(){
     Board board;
     Pawn pawn;
-    pawn.position = {1, 7};
+
+    pawn.position = {1, 6};
     pawn.color = Color::BLACK;
     pawn.prepareMoves(board);
+
     vector<pair<int, int> > correctMoves;
-    correctMoves.push_back({1,6});
+    correctMoves.push_back({1,5});
+    correctMoves.push_back({1, 4});
+
+    sort(correctMoves.begin(), correctMoves.end());
+    sort(pawn.moves.begin(), pawn.moves.end());
+
     assert(pawn.moves == correctMoves);
 }
 

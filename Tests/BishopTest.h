@@ -7,20 +7,20 @@
 class BishopTest {
     public:
     void runAllTests(){
-        noMoves();
+        twoMoves();
         emptyBoard();
         opponentPieceUpRight();
 
         cout<<"Bishop tests done"<<endl;
     }
 
-    void noMoves();
+    void twoMoves();
     void emptyBoard();
     void opponentPieceUpRight();
 
 };
 
-void BishopTest::noMoves(){
+void BishopTest::twoMoves(){
     Board board;
     Bishop bishop;
     bishop.position = {2, 0};
@@ -30,11 +30,18 @@ void BishopTest::noMoves(){
     board.board[1][1]->color = Color::WHITE;
     board.board[3][1] = new Bishop();
     board.board[3][1]->color = Color::WHITE;
-
     bishop.prepareMoves(board);
 
-    assert(bishop.moves.empty());
+    vector<pair<int, int> > correctMoves;
+    correctMoves.push_back({1, 1});
+    correctMoves.push_back({3, 1});
+
+    sort(correctMoves.begin(), correctMoves.end());
+    sort(bishop.moves.begin(), bishop.moves.end());
+
+    assert(bishop.moves == correctMoves);
 }
+
 void BishopTest::emptyBoard(){
     Board board;
     Bishop bishop;

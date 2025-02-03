@@ -1,7 +1,6 @@
 #include <iostream>
 #include "Game.h"
-using namespace std;
-
+#include "Tests/AllTests.h"
 
 int main(){
     Game game;

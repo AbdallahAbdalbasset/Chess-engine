@@ -6,7 +6,7 @@
 class QueenTest {
     public:
     void runAllTests(){
-        noMoves();
+        fourMoves();
         emptyBoard();
         opponentPieceUp();
         opponentPieceUpRight();
@@ -14,14 +14,14 @@ class QueenTest {
         cout<<"Queen tests done"<<endl;
     }
 
-    void noMoves();
+    void fourMoves();
     void emptyBoard();
     void opponentPieceUp();
     void opponentPieceUpRight();
 
 };
 
-void QueenTest::noMoves(){
+void QueenTest::fourMoves(){
     Board board;
     Queen queen;
     queen.position = {0, 0};
@@ -33,10 +33,17 @@ void QueenTest::noMoves(){
     board.board[0][1]->color = Color::WHITE;
     board.board[1][1] = new Queen();
     board.board[1][1]->color = Color::WHITE;
-
     queen.prepareMoves(board);
 
-    assert(queen.moves.empty());
+    vector<pair<int, int> > correctMoves;
+    correctMoves.push_back({1, 0});
+    correctMoves.push_back({0, 1});
+    correctMoves.push_back({1, 1});
+
+    sort(correctMoves.begin(), correctMoves.end());
+    sort(queen.moves.begin(), queen.moves.end());
+
+    assert(queen.moves == correctMoves);
 }
 
 void QueenTest::emptyBoard(){

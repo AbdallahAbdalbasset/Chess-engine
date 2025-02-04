@@ -13,7 +13,7 @@ This is a C++ chess game featuring a console-based board and a chess engine powe
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/chess-engine.git
+   git clone https://github.com/AbdallahAbdalbasset/Chess-engine.git
    cd chess-engine
    ```
 2. Compile the project using g++:

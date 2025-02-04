@@ -33,9 +33,11 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
             for(pair<int, int> newPosition : moves) {
                 if(!Helper::isValidMove(board, newPosition, color)) continue;
                 isStaleMate = false;
+
                 // Try this move
-                Piece* targetPiece = board.board[newPosition.first][newPosition.second];
-                Helper::playMove(board, {row, col}, newPosition, nullptr);
+                Piece* fromPiece = board.board[row][col];
+                Piece* toPiece = board.board[newPosition.first][newPosition.second];
+                Helper::playMove(board, {row, col}, newPosition, fromPiece, nullptr);
 
                 // Recursively call getMove for the opponent's turn
                 auto tempRes = getMove(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE, depth + 1, alpha, beta);
@@ -58,14 +60,14 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
                 }
                 
                 // Undo this move
-                Helper::playMove(board, newPosition, {row, col}, targetPiece);
+                Helper::playMove(board, newPosition, {row, col}, fromPiece, toPiece);
 
                 if(beta <= alpha) return ret;
             }
         }
     }
 
-    if(isStaleMate) return {{-1, -1}, {{-1, -1}, 0}};
+    if(isStaleMate) return {{-1, -1}, {{-1, -1}, staleMate}};
     return ret;
 }
 

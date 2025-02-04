@@ -2,6 +2,12 @@
 #include "../Board/Board.h"
 #include <iostream>
 #include "../Board/Pieces/Headers/Piece.h"
+#include "../Board/Pieces/Headers/Pawn.h"
+#include "../Board/Pieces/Headers/Rook.h"
+#include "../Board/Pieces/Headers/Knight.h"
+#include "../Board/Pieces/Headers/Bishop.h"
+#include "../Board/Pieces/Headers/Queen.h"
+#include "../Board/Pieces/Headers/King.h"
 #include "enum.h"
 
 using namespace std;
@@ -53,13 +59,14 @@ bool Helper::isCheckMate(Board board, Color color){
                 if(!isValidMove(board, newPosition, color))continue;
 
                 // Try this move
-                Piece* targetPiece = board.board[newPosition.first][newPosition.second];
-                playMove(board, {row, col}, newPosition, targetPiece);
+                Piece* fromPiece = board.board[row][col];
+                Piece* toPiece = board.board[newPosition.first][newPosition.second];
+                Helper::playMove(board, {row, col}, newPosition, fromPiece, nullptr);
 
                 if(!isCheck(board, color)) isNotcheckMate = true;
 
                 // Undo this move
-                playMove(board, newPosition, {row, col}, targetPiece);
+                Helper::playMove(board, newPosition, {row, col}, fromPiece, toPiece);
 
                 if(isNotcheckMate) return false;
             }
@@ -68,23 +75,81 @@ bool Helper::isCheckMate(Board board, Color color){
     return true;
 }
 
-void Helper::playMove(Board& board, pair<int, int> from, pair<int, int> to, Piece* targetPiece){    
+void Helper::playMove(Board& board, pair<int, int> from, pair<int, int> to, Piece* fromPiece, Piece* toPiece){    
     assert(isInBoard(from.first, from.second));
     assert(isInBoard(to.first, to.second));
     assert(board.board[from.first][from.second]!=nullptr);
 
-    board.board[to.first][to.second] = board.board[from.first][from.second];
-    board.board[from.first][from.second] = nullptr;
+    if(fromPiece) fromPiece->position = to;
+    board.board[to.first][to.second] = fromPiece;
+    
+    if(toPiece) toPiece->position = from;
+    board.board[from.first][from.second] = toPiece;
 
-    board.board[to.first][to.second]->position = to;
-    board.board[from.first][from.second] = targetPiece;
+    if(fromPiece && (to.second == 0 || to.second == 7) && fromPiece->name == "P"){// Promotion
+        board.board[to.first][to.second] = createQueen(fromPiece->color, fromPiece->position);
+    }
     board.prepareMoves();
 }
 
-bool Helper::isValidMove(Board board, pair<int, int> to, Color color){
+bool Helper::Helper::isValidMove(Board board, pair<int, int> to, Color color){
     // We chould not take our own pieces
     if(board.board[to.first][to.second] != nullptr
     && board.board[to.first][to.second]->color == color)return false;
-    
+
     return true;
+}
+
+Piece* Helper::createPawn(Color color, pair<int, int> position){
+    Piece* pawn = new Pawn;
+    pawn->position = position;
+    pawn->name = "P";
+    pawn->value = 1;
+    pawn->color = color;
+    return pawn;
+}  
+
+Piece* Helper::createRook(Color color, pair<int, int> position){
+    Piece* rook = new Rook;
+    rook->position = position;
+    rook->name = "R";
+    rook->value = 5;
+    rook->color = color;
+    return rook;
+}
+
+Piece* Helper::createKnight(Color color, pair<int, int> position){
+    Piece* knight = new Knight;
+    knight->position = position;
+    knight->name = "N";
+    knight->value = 3;
+    knight->color = color;
+    return knight;
+}
+
+Piece* Helper::createBishop(Color color, pair<int, int> position){
+    Piece* bishop = new Bishop;
+    bishop->position = position;
+    bishop->name = "B";
+    bishop->value = 3;
+    bishop->color = color;
+    return bishop;
+}
+
+Piece* Helper::createQueen(Color color, pair<int, int> position){
+    Piece* queen = new Queen;
+    queen->position = position;
+    queen->name = "Q";
+    queen->value = 9;
+    queen->color = color;
+    return queen;
+}
+
+Piece* Helper::createKing(Color color, pair<int, int> position){
+    Piece* king = new King();
+    king->position = position;
+    king->name = "K";
+    king->value = 0;
+    king->color = color;
+    return king;
 }

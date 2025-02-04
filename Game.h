@@ -19,6 +19,8 @@ class Game{
     void rookAndAQueen(Board&);
     void knightsAndTwoRooks(Board&);
     void initialBoard(Board&);
+    void promotion(Board&);
+    void mateWithRook(Board&);
 };
 
 void Game::initialBoard(Board& board){
@@ -119,9 +121,25 @@ void Game::napilion(Board& board){
     board.board[4][6] = nullptr;
 }
 
+void Game::promotion(Board& board){
+    board.board[0][6] = Helper::createPawn(Color::WHITE, {0, 6});
+    board.board[1][6] = Helper::createRook(Color::WHITE, {1, 6});
+
+    board.board[0][7] = Helper::createPawn(Color::BLACK, {0, 7});
+    board.board[1][7] = Helper::createRook(Color::BLACK, {1, 7});
+    board.board[7][7] = Helper::createKing(Color::BLACK, {7, 7});
+}
+
+void Game::mateWithRook(Board& board){
+    board.board[0][1] = Helper::createRook(Color::WHITE, {0, 1});
+    board.board[1][1] = Helper::createKing(Color::WHITE, {1, 1});
+
+    board.board[7][7] = Helper::createKing(Color::BLACK, {7, 7});
+}
+
 void Game::startGame(){
     Board board;
-    knightsAndTwoRooks(board);
+    mateWithRook(board);
 
     board.prepareMoves();
     board.printBoard();
@@ -141,22 +159,23 @@ void Game::startGame(){
                 cout<<"Calculating..."<<endl;
                 ret = Engine::getMove(board, Color::WHITE, 0, INT_MIN, INT_MAX);
 
-                Helper::playMove(board, ret.first, ret.second.first, nullptr);
+                Helper::playMove(board, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
             }else if(c == 2){// black move
                 cout<<"Calculating..."<<endl;
                 ret = Engine::getMove(board, Color::BLACK, 0, INT_MIN, INT_MAX);
 
-                Helper::playMove(board, ret.first, ret.second.first, nullptr);
+                Helper::playMove(board, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
             }else{// Play a move manually
                 cin>>from.first>>from.second>>to.first>>to.second;
-                Helper::playMove(board, from, to, nullptr);
+                Helper::playMove(board, from, to, board.board[from.first][from.second], nullptr);
+                ret.second.second = 1;
             }
             board.prepareMoves();
             board.printBoard();
 
-            if(ret.second.second == staleMate) cout<<"Stale Mate" << endl;
-            else if(ret.second.second > whiteMinCheckMate) cout << "White Win :)" << endl;
-            else if(ret.second.second < blackMinCheckMate) cout << "Black Win :(" << endl;
+            if(ret.second.second == staleMate) { cout<<"Stale Mate" << endl; return; }
+            if(ret.second.second == whiteCheckMate) { cout << "White Win :)" << endl; return; }
+            if(ret.second.second == blackCheckMate) { cout << "Black Win :)" << endl; return; }
         }
     }
 }

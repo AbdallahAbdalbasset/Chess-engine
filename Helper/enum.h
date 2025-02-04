@@ -1,7 +1,7 @@
 #pragma once
 #define staleMate 0
-#define whiteMinCheckMate INT_MAX-100
-#define blackMinCheckMate INT_MIN+100
+#define whiteCheckMate INT_MAX-1
+#define blackCheckMate INT_MIN+1
 
 enum Color{
     WHITE,

@@ -6,6 +6,8 @@
 #include "Pieces/Headers/Bishop.h"
 #include "Pieces/Headers/Queen.h"
 #include "Pieces/Headers/King.h"
+#include "../Helper/Helper.h"
+#include "../Helper/enum.h"
 #include <iomanip>
 #include <iostream>
 #include <set>
@@ -14,95 +16,40 @@
 using namespace std;
 Board::Board():board(vector<vector<Piece*> >(8, vector<Piece*>(8, nullptr))){}
 
-Piece* createPawn(Color color, pair<int, int> position){
-    Piece* pawn = new Pawn;
-    pawn->position = position;
-    pawn->name = "P";
-    pawn->value = 1;
-    pawn->color = color;
-    return pawn;
-}  
-
-Piece* createRook(Color color, pair<int, int> position){
-    Piece* rook = new Rook;
-    rook->position = position;
-    rook->name = "R";
-    rook->value = 5;
-    rook->color = color;
-    return rook;
-}
-
-Piece* createKnight(Color color, pair<int, int> position){
-    Piece* knight = new Knight;
-    knight->position = position;
-    knight->name = "N";
-    knight->value = 3;
-    knight->color = color;
-    return knight;
-}
-
-Piece* createBishop(Color color, pair<int, int> position){
-    Piece* bishop = new Bishop;
-    bishop->position = position;
-    bishop->name = "B";
-    bishop->value = 3;
-    bishop->color = color;
-    return bishop;
-}
-
-Piece* createQueen(Color color, pair<int, int> position){
-    Piece* queen = new Queen;
-    queen->position = position;
-    queen->name = "Q";
-    queen->value = 9;
-    queen->color = color;
-    return queen;
-}
-
-Piece* createKing(Color color, pair<int, int> position){
-    Piece* king = new King();
-    king->position = position;
-    king->name = "K";
-    king->value = 0;
-    king->color = color;
-    return king;
-}
-
-
 void Board::initializeBoard(){
     for(int i=0; i<8; i++){
-        board[i][1] = createPawn(WHITE, {i, 1});
+        board[i][1] = Helper::createPawn(WHITE, {i, 1});
     }
 
     for(int i=0; i<8; i++){
-        board[i][6] = createPawn(BLACK, {i, 6});
+        board[i][6] = Helper::createPawn(BLACK, {i, 6});
     }
 
-    board[0][0] = createRook(WHITE, {0, 0});
-    board[7][0] = createRook(WHITE, {0, 7});
+    board[0][0] = Helper::createRook(WHITE, {0, 0});
+    board[7][0] = Helper::createRook(WHITE, {0, 7});
 
-    board[0][7] = createRook(BLACK, {7, 0});
-    board[7][7] = createRook(BLACK, {7, 7});
+    board[0][7] = Helper::createRook(BLACK, {7, 0});
+    board[7][7] = Helper::createRook(BLACK, {7, 7});
 
-    board[1][0] = createKnight(WHITE, {1, 0});
-    board[6][0] = createKnight(WHITE, {6, 0});
+    board[1][0] = Helper::createKnight(WHITE, {1, 0});
+    board[6][0] = Helper::createKnight(WHITE, {6, 0});
 
-    board[1][7] = createKnight(BLACK, {1, 7});
-    board[6][7] = createKnight(BLACK, {6, 7});
+    board[1][7] = Helper::createKnight(BLACK, {1, 7});
+    board[6][7] = Helper::createKnight(BLACK, {6, 7});
 
-    board[2][0] = createBishop(WHITE, {2, 0});
-    board[5][0] = createBishop(WHITE, {5, 0});
+    board[2][0] = Helper::createBishop(WHITE, {2, 0});
+    board[5][0] = Helper::createBishop(WHITE, {5, 0});
 
-    board[2][7] = createBishop(BLACK, {2, 7});
-    board[5][7] = createBishop(BLACK, {5, 7});
+    board[2][7] = Helper::createBishop(BLACK, {2, 7});
+    board[5][7] = Helper::createBishop(BLACK, {5, 7});
 
-    board[3][0] = createQueen(WHITE, {3, 0});
+    board[3][0] = Helper::createQueen(WHITE, {3, 0});
 
-    board[3][7] = createQueen(BLACK, {3, 7});
+    board[3][7] = Helper::createQueen(BLACK, {3, 7});
 
-    board[4][0] = createKing(WHITE, {4, 0});
+    board[4][0] = Helper::createKing(WHITE, {4, 0});
 
-    board[4][7] = createKing(BLACK, {4, 7});
+    board[4][7] = Helper::createKing(BLACK, {4, 7});
 }
 void Board::printBoard(){
     system("clear");

@@ -146,11 +146,16 @@ void Game::startGame(){
 
     while(1){
         int c;
+        cout<<"0 Print valid moves for specific Piece"<<endl;
+        cout<<"1 The engine will play white move"<<endl;
+        cout<<"2 The engine will play black move"<<endl;
+        cout<<"3 Play a move manually"<<endl;
         while(cin>>c){
             pair<int, int> from, to;
             pair<pair<int, int>, pair<pair<int, int>, int>> ret;
 
             if(c == 0){// Print valid moves for specific Piece
+                cout<<"Enter the position of the piece: ";
                 cin>>from.first>>from.second;
                 for(auto&i:board.board[from.first][from.second]->moves)
                     cout<<i.first<<i.second<<" ";cout<<endl;
@@ -166,6 +171,7 @@ void Game::startGame(){
 
                 Helper::playMove(board, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
             }else{// Play a move manually
+                cout<<"Enter the from and to positions: ";
                 cin>>from.first>>from.second>>to.first>>to.second;
                 Helper::playMove(board, from, to, board.board[from.first][from.second], nullptr);
                 ret.second.second = 1;

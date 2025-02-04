@@ -25,13 +25,23 @@ This is a C++ chess game featuring a console-based board and a chess engine powe
    ./chess
    ```
 
-## Usage
+Usage
 
-- Start the game and follow the console instructions.
-- Enter moves using board coordinates in the format: `fromX fromY toX toY`
-  - Example: `0 1 0 2` moves the piece from `(0,1)` to `(0,2)`.
-- Play against another player or challenge the chess engine.
+Start the game and follow the console instructions.
 
+Enter moves using board coordinates in the format: fromX fromY toX toY
+
+Example: 0 1 0 2 moves the piece from (0,1) to (0,2).
+
+Choose the play mode by entering a number:
+
+1 - The engine plays a White move.
+
+2 - The engine plays a Black move.
+
+3 - Manual move.
+
+Play against another player or challenge the chess engine.
 ## Future Improvements
 
 - Implement bitboards for optimized board representation.

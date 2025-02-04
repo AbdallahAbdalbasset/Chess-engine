@@ -139,7 +139,7 @@ void Game::mateWithRook(Board& board){
 
 void Game::startGame(){
     Board board;
-    mateWithRook(board);
+    initialBoard(board);
 
     board.prepareMoves();
     board.printBoard();
@@ -173,7 +173,6 @@ void Game::startGame(){
             board.prepareMoves();
             board.printBoard();
 
-            if(ret.second.second == staleMate) { cout<<"Stale Mate" << endl; return; }
             if(ret.second.second == whiteCheckMate) { cout << "White Win :)" << endl; return; }
             if(ret.second.second == blackCheckMate) { cout << "Black Win :)" << endl; return; }
         }

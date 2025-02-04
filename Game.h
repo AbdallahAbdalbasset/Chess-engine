@@ -181,6 +181,11 @@ void Game::startGame(){
 
             if(ret.second.second == whiteCheckMate) { cout << "White Win :)" << endl; return; }
             if(ret.second.second == blackCheckMate) { cout << "Black Win :)" << endl; return; }
+
+            cout<<"0 Print valid moves for specific Piece"<<endl;
+            cout<<"1 The engine will play white move"<<endl;
+            cout<<"2 The engine will play black move"<<endl;
+            cout<<"3 Play a move manually"<<endl;
         }
     }
 }

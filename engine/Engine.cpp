@@ -4,9 +4,8 @@
 #include <iostream>
 
 using namespace std;
+int Engine::maxDepth = 6;
 
-
-int Engine::maxDepth = 4;
 pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Color color, int depth, int alpha, int beta){
 
     if(Helper::isCheck(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE)){
@@ -17,7 +16,7 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
         return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? INT_MIN+depth : INT_MAX-depth}};
     }
 
-    if(depth == 4){
+    if(depth == maxDepth){
         int score = getScore(board);
         return {{-1, -1}, {{-1, -1}, score}};
     }

@@ -139,7 +139,7 @@ void Game::mateWithRook(Board& board){
 
 void Game::startGame(){
     Board board;
-    initialBoard(board);
+    knightsAndTwoRooks(board);
 
     board.prepareMoves();
     board.printBoard();

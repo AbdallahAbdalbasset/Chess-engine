@@ -14,13 +14,16 @@ This is a C++ chess game featuring a console-based board and a chess engine powe
 1. Clone the repository:
    ```sh
    git clone https://github.com/AbdallahAbdalbasset/Chess-engine.git
+   ```
+2. Navigate to the directory
+   ```sh
    cd chess-engine
    ```
-2. Compile the project using g++:
+3. Compile the project using g++:
    ```sh
    g++ -std=c++11 *.cpp Board/Board.cpp Engine/Engine.cpp Board/Pieces/Sources/*.cpp Helper/Helper.cpp -o chess
    ```
-3. Run the game:
+4. Run the game:
    ```sh
    ./chess
    ```
@@ -31,9 +34,10 @@ This is a C++ chess game featuring a console-based board and a chess engine powe
 - Enter moves using board coordinates in the format: `fromX fromY toX toY`
   - Example: `0 1 0 2` moves the piece from `(0,1)` to `(0,2)`.
 - Choose the play mode by entering a number:
+  - `0` - Print valid moves for specific Piece 
   - `1` - The engine plays a White move.
   - `2` - The engine plays a Black move.
-  - `3` - Manual move.
+  - `3` - Play a Manual move.
 - Play against another player or challenge the chess engine.
 
 ## Future Improvements

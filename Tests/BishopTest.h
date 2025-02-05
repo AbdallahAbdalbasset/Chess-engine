@@ -26,10 +26,8 @@ void BishopTest::twoMoves(){
     bishop.position = {2, 0};
     bishop.color = Color::WHITE;
 
-    board.board[1][1] = new Bishop();
-    board.board[1][1]->color = Color::WHITE;
-    board.board[3][1] = new Bishop();
-    board.board[3][1]->color = Color::WHITE;
+    board.board[1][1] = Helper::createBishop(Color::WHITE, {1, 1});
+    board.board[3][1] = Helper::createBishop(Color::WHITE, {3, 1});
     bishop.prepareMoves(board);
 
     vector<pair<int, int> > correctMoves;
@@ -88,9 +86,7 @@ void BishopTest::opponentPieceUpRight(){
     bishop.position = {5, 5};
     bishop.color = Color::WHITE;
 
-    board.board[6][6] = new Bishop();
-    board.board[6][6]->color = Color::BLACK;
-
+    board.board[6][6] = Helper::createBishop(Color::BLACK, {6, 6});
     bishop.prepareMoves(board);
 
     vector<pair<int, int> > correctMoves;

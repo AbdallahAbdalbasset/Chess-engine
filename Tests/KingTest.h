@@ -25,12 +25,9 @@ void KingTest::threeMoves(){
     king.position = {0, 0};
     king.color = Color::WHITE;
     
-    board.board[1][1] = new King();
-    board.board[1][1]->color = Color::WHITE;
-    board.board[0][1] = new King();
-    board.board[0][1]->color = Color::WHITE;
-    board.board[1][0] = new King();
-    board.board[1][0]->color = Color::WHITE;
+    board.board[1][1] = Helper::createKnight(Color::WHITE, {1, 1});
+    board.board[0][1] = Helper::createKnight(Color::WHITE, {0, 1});
+    board.board[1][0] = Helper::createKnight(Color::WHITE, {1, 0});
     king.prepareMoves(board);
 
     vector<pair<int, int> > correctMoves;
@@ -76,9 +73,8 @@ void KingTest::opponentPieceUpRight(){
     king.position = {3, 3};
     king.color = Color::WHITE;
     
-    board.board[4][4] = new King();
-    board.board[4][4]->color = Color::BLACK;
-
+    board.board[4][4] = Helper::createKnight(Color::WHITE, {4, 4});
+    
     king.prepareMoves(board);
 
     vector<pair<int, int> > correctMoves;

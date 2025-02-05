@@ -25,10 +25,8 @@ void RookTest::twoMoves(){
     rook.position = {0, 0};
     rook.color = Color::WHITE;
 
-    board.board[0][1] = new Rook();
-    board.board[0][1]->color = Color::WHITE;
-    board.board[1][0] = new Rook();
-    board.board[1][0]->color = Color::WHITE;
+    board.board[0][1] = Helper::createRook(Color::WHITE,  {0, 1});
+    board.board[1][0] = Helper::createRook(Color::WHITE,  {1, 0});
     rook.prepareMoves(board);
 
     vector<pair<int, int>> correctMoves;
@@ -82,7 +80,7 @@ void RookTest::opponentPieceUp(){
     Rook rook;
     rook.position = {5, 5};
     rook.color = Color::WHITE;
-    board.board[5][6] = new Rook();
+    board.board[5][6] = Helper::createRook(Color::BLACK,  {5, 6});
     board.board[5][6]->color = Color::BLACK;
 
     rook.prepareMoves(board);

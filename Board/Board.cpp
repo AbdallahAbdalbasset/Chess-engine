@@ -14,7 +14,7 @@
 #include <vector>
 
 using namespace std;
-Board::Board():board(vector<vector<Piece*> >(8, vector<Piece*>(8, nullptr))){}
+Board::Board():board(vector<vector<shared_ptr<Piece>> >(8, vector<shared_ptr<Piece>>(8))){}
 
 void Board::initializeBoard(){
     for(int i=0; i<8; i++){

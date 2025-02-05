@@ -27,12 +27,9 @@ void QueenTest::fourMoves(){
     queen.position = {0, 0};
     queen.color = Color::WHITE;
 
-    board.board[1][0] = new Queen();
-    board.board[1][0]->color = Color::WHITE;
-    board.board[0][1] = new Queen();
-    board.board[0][1]->color = Color::WHITE;
-    board.board[1][1] = new Queen();
-    board.board[1][1]->color = Color::WHITE;
+    board.board[1][0] = Helper::createQueen(Color::WHITE, {1, 0}); 
+    board.board[0][1] = Helper::createQueen(Color::WHITE, {0, 1}); 
+    board.board[1][1] = Helper::createQueen(Color::WHITE, {1, 1}); 
     queen.prepareMoves(board);
 
     vector<pair<int, int> > correctMoves;
@@ -111,8 +108,7 @@ void QueenTest::opponentPieceUp(){
     queen.position = {3, 3};
     queen.color = Color::WHITE;
 
-    board.board[3][4] = new Queen();
-    board.board[3][4]->color = Color::BLACK;
+    board.board[3][4] = Helper::createQueen(Color::BLACK, {3, 4}); 
 
     queen.prepareMoves(board);
     
@@ -171,8 +167,7 @@ void QueenTest::opponentPieceUpRight(){
     queen.position = {3, 3};
     queen.color = Color::WHITE;
 
-    board.board[4][4] = new Queen();
-    board.board[4][4]->color = Color::BLACK;
+    board.board[4][4] = Helper::createQueen(Color::BLACK, {4, 4}); 
 
     queen.prepareMoves(board);
 

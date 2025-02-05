@@ -36,8 +36,8 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
                 isStaleMate = false;
 
                 // Try this move
-                Piece* fromPiece = board.board[row][col];
-                Piece* toPiece = board.board[newPosition.first][newPosition.second];
+                shared_ptr<Piece> fromPiece = board.board[row][col];
+                shared_ptr<Piece> toPiece = board.board[newPosition.first][newPosition.second];
                 Helper::playMove(board, {row, col}, newPosition, fromPiece, nullptr);
 
                 // Recursively call getMove for the opponent's turn

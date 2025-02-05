@@ -58,14 +58,9 @@ void PawnTest::allMovesAreValid(){
     Pawn pawn;
     pawn.position = {4, 2};
     pawn.color = Color::WHITE;
-        
-    Pawn opponent1;
-    Pawn opponent2;
-    opponent1.color = Color::BLACK;
-    opponent2.color = Color::BLACK;
 
-    board.board[3][3] = &opponent1;
-    board.board[5][3] = &opponent2;
+    board.board[3][3] = Helper::createPawn(Color::BLACK, {3, 3});
+    board.board[5][3] = Helper::createPawn(Color::BLACK, {5, 3});
 
     pawn.prepareMoves(board);
 

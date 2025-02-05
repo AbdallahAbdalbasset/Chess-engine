@@ -25,10 +25,8 @@ void KnightTest::twoMoves(){
     knight.position = {0, 0};
     knight.color = Color::WHITE;
 
-    board.board[1][2] = new Knight();
-    board.board[1][2]->color = Color::WHITE;
-    board.board[2][1] = new Knight();
-    board.board[2][1]->color = Color::WHITE;
+    board.board[1][2] = Helper::createKnight(Color::WHITE, {1, 2});
+    board.board[2][1] = Helper::createKnight(Color::WHITE, {2, 1});
     knight.prepareMoves(board);
 
     vector<pair<int, int> > correctMoves;
@@ -71,8 +69,7 @@ void KnightTest::opponentPieceUpRight(){
     knight.position = {3, 3};
     knight.color = Color::WHITE;
 
-    board.board[4][5] = new Knight();
-    board.board[4][5]->color = Color::BLACK;
+    board.board[4][5] = Helper::createKnight(Color::BLACK, {4, 5});
 
     knight.prepareMoves(board);
 

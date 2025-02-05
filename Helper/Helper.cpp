@@ -59,8 +59,8 @@ bool Helper::isCheckMate(Board board, Color color){
                 if(!isValidMove(board, newPosition, color))continue;
 
                 // Try this move
-                Piece* fromPiece = board.board[row][col];
-                Piece* toPiece = board.board[newPosition.first][newPosition.second];
+                shared_ptr<Piece> fromPiece = board.board[row][col];
+                shared_ptr<Piece> toPiece = board.board[newPosition.first][newPosition.second];
                 Helper::playMove(board, {row, col}, newPosition, fromPiece, nullptr);
 
                 if(!isCheck(board, color)) isNotcheckMate = true;
@@ -75,7 +75,7 @@ bool Helper::isCheckMate(Board board, Color color){
     return true;
 }
 
-void Helper::playMove(Board& board, pair<int, int> from, pair<int, int> to, Piece* fromPiece, Piece* toPiece){    
+void Helper::playMove(Board& board, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> fromPiece, shared_ptr<Piece> toPiece){    
     assert(isInBoard(from.first, from.second));
     assert(isInBoard(to.first, to.second));
     assert(board.board[from.first][from.second]!=nullptr);
@@ -100,8 +100,8 @@ bool Helper::Helper::isValidMove(Board board, pair<int, int> to, Color color){
     return true;
 }
 
-Piece* Helper::createPawn(Color color, pair<int, int> position){
-    Piece* pawn = new Pawn;
+shared_ptr<Piece> Helper::createPawn(Color color, pair<int, int> position){
+    shared_ptr<Piece> pawn = make_shared<Pawn>();
     pawn->position = position;
     pawn->name = "P";
     pawn->value = 1;
@@ -109,8 +109,8 @@ Piece* Helper::createPawn(Color color, pair<int, int> position){
     return pawn;
 }  
 
-Piece* Helper::createRook(Color color, pair<int, int> position){
-    Piece* rook = new Rook;
+shared_ptr<Piece> Helper::createRook(Color color, pair<int, int> position){
+    shared_ptr<Piece> rook = make_shared<Rook>();
     rook->position = position;
     rook->name = "R";
     rook->value = 5;
@@ -118,8 +118,8 @@ Piece* Helper::createRook(Color color, pair<int, int> position){
     return rook;
 }
 
-Piece* Helper::createKnight(Color color, pair<int, int> position){
-    Piece* knight = new Knight;
+shared_ptr<Piece> Helper::createKnight(Color color, pair<int, int> position){
+    shared_ptr<Piece> knight = make_shared<Knight>();
     knight->position = position;
     knight->name = "N";
     knight->value = 3;
@@ -127,8 +127,8 @@ Piece* Helper::createKnight(Color color, pair<int, int> position){
     return knight;
 }
 
-Piece* Helper::createBishop(Color color, pair<int, int> position){
-    Piece* bishop = new Bishop;
+shared_ptr<Piece> Helper::createBishop(Color color, pair<int, int> position){
+    shared_ptr<Piece> bishop = make_shared<Bishop>();
     bishop->position = position;
     bishop->name = "B";
     bishop->value = 3;
@@ -136,8 +136,8 @@ Piece* Helper::createBishop(Color color, pair<int, int> position){
     return bishop;
 }
 
-Piece* Helper::createQueen(Color color, pair<int, int> position){
-    Piece* queen = new Queen;
+shared_ptr<Piece> Helper::createQueen(Color color, pair<int, int> position){
+    shared_ptr<Piece> queen = make_shared<Queen>();
     queen->position = position;
     queen->name = "Q";
     queen->value = 9;
@@ -145,8 +145,8 @@ Piece* Helper::createQueen(Color color, pair<int, int> position){
     return queen;
 }
 
-Piece* Helper::createKing(Color color, pair<int, int> position){
-    Piece* king = new King();
+shared_ptr<Piece> Helper::createKing(Color color, pair<int, int> position){
+    shared_ptr<Piece> king = make_shared<King>();
     king->position = position;
     king->name = "K";
     king->value = 0;

@@ -16,11 +16,15 @@ This is a C++ chess game featuring a console-based board and a chess engine powe
    git clone https://github.com/AbdallahAbdalbasset/Chess-engine.git
    cd chess-engine
    ```
-2. Compile the project using g++:
+2. Navigate to the directory
+   ```sh
+   cd chess-engine
+   ```
+3. Compile the project using g++:
    ```sh
    g++ -std=c++11 *.cpp Board/Board.cpp Engine/Engine.cpp Board/Pieces/Sources/*.cpp Helper/Helper.cpp -o chess
    ```
-3. Run the game:
+4. Run the game:
    ```sh
    ./chess
    ```

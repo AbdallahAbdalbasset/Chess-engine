@@ -6,7 +6,7 @@
 #include <iostream>
 
 using namespace std;
-int Engine::maxDepth = 6;
+int Engine::maxDepth = 4;
 
 pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Color color, int depth, int alpha, int beta, int threadId){
 

@@ -71,7 +71,7 @@ void Game::mateWithRook(Board& board){
 
 void Game::startGame(){
     Board board;
-    knightsAndTwoRooks(board);
+    initialBoard(board);
 
     board.prepareMoves();
     board.printBoard();
@@ -103,7 +103,7 @@ void Game::startGame(){
 
                 auto end = chrono::high_resolution_clock::now();
                 duration = chrono::duration_cast<chrono::microseconds>(end - start);
-                
+
                 if(ret.first.first == -1) {cout<<"StaleMate "<<endl; return; }
                 Helper::playMove(board, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
             }else if(c == 2){// black move

@@ -38,8 +38,10 @@ This is a C++ chess game featuring a console-based board and a chess engine powe
   - Example: `0 1 0 2` moves the piece from `(0,1)` to `(0,2)`.
 
 ## Future Improvements
-
+- Implement an opening book to speed up early-game decisions.
 - Implement bitboards for optimized board representation.
 - Add a transposition table to enhance engine efficiency.
+- Develop a GUI for an interactive chessboard experience.
+
 
 

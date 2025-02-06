@@ -6,7 +6,7 @@
 #include <iostream>
 
 using namespace std;
-int Engine::maxDepth = 4;
+int Engine::maxDepth = 6;
 
 pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Color color, int depth, int alpha, int beta, int threadId){
 
@@ -34,8 +34,8 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
         end = threadId*2 + 2;
     }
 
-    for(int col=start;col<end;col++) {
-        for(int row=0;row<8;row++) {
+    for(int row=start;row<end;row++) {
+        for(int col=0;col<8;col++) {
             if(board.board[row][col] == nullptr) continue;
             if(board.board[row][col]->color != color) continue;
 
@@ -120,6 +120,11 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
             bestMove = moves[i];
         }
         if(color == Color::BLACK && bestMove.second.second > moves[i].second.second){
+            bestMove = moves[i];
+        }
+
+        // Prefer moves that does not lead to a king move
+        if(bestMove.first.first != -1 && bestMove.second.second == moves[i].second.second && board.board[bestMove.first.first][bestMove.first.second]->name == "K"){
             bestMove = moves[i];
         }
     }

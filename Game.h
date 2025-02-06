@@ -71,7 +71,7 @@ void Game::mateWithRook(Board& board){
 
 void Game::startGame(){
     Board board;
-    initialBoard(board);
+    knightsAndTwoRooks(board);
 
     board.prepareMoves();
     board.printBoard();
@@ -132,7 +132,7 @@ void Game::startGame(){
 
             if(ret.second.second == WHITECHECKMATE) { cout << "White Win :)" << endl; return; }
             if(ret.second.second == BLACKCHECKMATE) { cout << "Black Win :)" << endl; return; }
-            if(ret.second.second == DRAW) { cout << "Draw!" << endl; return; }
+            if(Helper::isDraw(board)) { cout << "Draw!" << endl; return; }
 
             cout<<"0 Print valid moves for specific Piece"<<endl;
             cout<<"1 The engine will play white move"<<endl;

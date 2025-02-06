@@ -174,3 +174,14 @@ Board Helper::copyBoard(Board board){
     copy.prepareMoves();
     return copy;
 }
+
+bool Helper::isDraw(Board& board){
+    for(int i = 0;i<8;i++){
+        for(int j = 0;j<8;j++){
+            if(board.board[i][j] == nullptr)continue;
+            if(board.board[i][j]->name != "K")return false;
+        }
+    }
+
+    return true;
+}

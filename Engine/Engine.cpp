@@ -34,7 +34,6 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
         end = threadId*2 + 2;
     }
 
-    bool isStaleMate = true;
     for(int col=start;col<end;col++) {
         for(int row=0;row<8;row++) {
             if(board.board[row][col] == nullptr) continue;
@@ -43,7 +42,6 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
             auto moves = board.board[row][col]->moves;
             for(pair<int, int> newPosition : moves) {
                 if(!Helper::isValidMove(board, newPosition, color)) continue;
-                isStaleMate = false;
 
                 // Try this move
                 shared_ptr<Piece> fromPiece = board.board[row][col];
@@ -78,7 +76,6 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
         }
     }
 
-    //if(isStaleMate) return {{-1, -1}, {{-1, -1}, staleMate}};
     return ret;
 }
 
@@ -125,8 +122,6 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
         if(color == Color::BLACK && bestMove.second.second > moves[i].second.second){
             bestMove = moves[i];
         }
-
-        cout<<moves[i].second.second<<" "<<i<<endl;
     }
     
     return bestMove;

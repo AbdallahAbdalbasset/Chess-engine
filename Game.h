@@ -103,7 +103,8 @@ void Game::startGame(){
 
                 auto end = chrono::high_resolution_clock::now();
                 duration = chrono::duration_cast<chrono::microseconds>(end - start);
-
+                
+                if(ret.first.first == -1) {cout<<"StaleMate "<<endl; return; }
                 Helper::playMove(board, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
             }else if(c == 2){// black move
                 cout<<"Calculating..."<<endl;
@@ -115,6 +116,7 @@ void Game::startGame(){
                 auto end = chrono::high_resolution_clock::now();
                 duration = chrono::duration_cast<chrono::microseconds>(end - start);
 
+                if(ret.first.first == -1) {cout<<"StaleMate "<<endl; return; }
                 Helper::playMove(board, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
             }else{// Play a move manually
                 cout<<"Enter the from and to positions: ";
@@ -128,8 +130,9 @@ void Game::startGame(){
 
             cout<<"Time: " << duration.count() << " seconds"<<endl;
 
-            if(ret.second.second == whiteCheckMate) { cout << "White Win :)" << endl; return; }
-            if(ret.second.second == blackCheckMate) { cout << "Black Win :)" << endl; return; }
+            if(ret.second.second == WHITECHECKMATE) { cout << "White Win :)" << endl; return; }
+            if(ret.second.second == BLACKCHECKMATE) { cout << "Black Win :)" << endl; return; }
+            if(ret.second.second == DRAW) { cout << "Draw!" << endl; return; }
 
             cout<<"0 Print valid moves for specific Piece"<<endl;
             cout<<"1 The engine will play white move"<<endl;

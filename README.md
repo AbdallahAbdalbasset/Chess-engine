@@ -18,13 +18,13 @@ This is a C++ chess game featuring a console-based board and a chess engine powe
    ```sh
    cd chess-engine
    ```
-3. Compile the project using g++:
-   ```sh
-   g++ -std=c++11 *.cpp Board/Board.cpp Engine/Engine.cpp Board/Pieces/Sources/*.cpp Helper/Helper.cpp -o chess
-   ```
-4. Run the game:
+3. Run the game:
    ```sh
    ./chess
+   ```
+## Compile the project using g++:
+   ```sh
+   g++ -std=c++17 *.cpp Board/Board.cpp Engine/Engine.cpp Board/Pieces/Sources/*.cpp Helper/Helper.cpp -o chess
    ```
 
 ## Usage

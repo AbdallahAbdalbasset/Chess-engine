@@ -18,6 +18,7 @@ class Helper{
     static shared_ptr<Piece> createBishop(Color color, pair<int, int> position);
     static shared_ptr<Piece> createQueen(Color color, pair<int, int> position);
     static shared_ptr<Piece> createKing(Color color, pair<int, int> position);
+    static Board copyBoard(Board board);
     
 };
 

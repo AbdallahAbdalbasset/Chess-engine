@@ -153,3 +153,24 @@ shared_ptr<Piece> Helper::createKing(Color color, pair<int, int> position){
     king->color = color;
     return king;
 }
+
+Board Helper::copyBoard(Board board){
+    Board copy;
+    
+    for(int i = 0;i<8;i++){
+        for(int j = 0;j<8;j++){
+            if(board.board[i][j]== nullptr) continue;
+
+            string name = board.board[i][j]->name;  
+            if(name == "P") copy.board[i][j] = Helper::createPawn(board.board[i][j]->color, {i, j});
+            else if(name == "R") copy.board[i][j] = Helper::createRook(board.board[i][j]->color, {i, j});
+            else if(name == "N") copy.board[i][j] = Helper::createKnight(board.board[i][j]->color, {i, j});
+            else if(name == "B") copy.board[i][j] = Helper::createBishop(board.board[i][j]->color, {i, j});
+            else if(name == "Q") copy.board[i][j] = Helper::createQueen(board.board[i][j]->color, {i, j});
+            else if(name == "K") copy.board[i][j] = Helper::createKing(board.board[i][j]->color, {i, j});
+        }
+    }
+
+    copy.prepareMoves();
+    return copy;
+}

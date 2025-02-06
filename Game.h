@@ -7,6 +7,7 @@
 #include "Board/Pieces/Headers/Knight.h"
 #include "Board/Pieces/Headers/Pawn.h"
 #include "Helper/enum.h"
+#include <chrono>
 #include <iostream>
 
 using namespace std;
@@ -81,6 +82,8 @@ void Game::startGame(){
         cout<<"1 The engine will play white move"<<endl;
         cout<<"2 The engine will play black move"<<endl;
         cout<<"3 Play a move manually"<<endl;
+
+        chrono::duration<double> duration;
         while(cin>>c){
             pair<int, int> from, to;
             pair<pair<int, int>, pair<pair<int, int>, int>> ret;
@@ -93,22 +96,37 @@ void Game::startGame(){
                 continue;
             }else if(c == 1){// white move
                 cout<<"Calculating..."<<endl;
-                ret = Engine::getMove(board, Color::WHITE, 0, INT_MIN, INT_MAX);
+
+                auto start = chrono::high_resolution_clock::now();
+
+                ret = Engine::getMove(board, Color::WHITE);
+
+                auto end = chrono::high_resolution_clock::now();
+                duration = chrono::duration_cast<chrono::microseconds>(end - start);
 
                 Helper::playMove(board, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
             }else if(c == 2){// black move
                 cout<<"Calculating..."<<endl;
-                ret = Engine::getMove(board, Color::BLACK, 0, INT_MIN, INT_MAX);
+
+                auto start = chrono::high_resolution_clock::now();
+
+                ret = Engine::getMove(board, Color::BLACK);
+
+                auto end = chrono::high_resolution_clock::now();
+                duration = chrono::duration_cast<chrono::microseconds>(end - start);
 
                 Helper::playMove(board, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
             }else{// Play a move manually
                 cout<<"Enter the from and to positions: ";
+
                 cin>>from.first>>from.second>>to.first>>to.second;
                 Helper::playMove(board, from, to, board.board[from.first][from.second], nullptr);
                 ret.second.second = 1;
             }
             board.prepareMoves();
             board.printBoard();
+
+            cout<<"Time: " << duration.count() << " seconds"<<endl;
 
             if(ret.second.second == whiteCheckMate) { cout << "White Win :)" << endl; return; }
             if(ret.second.second == blackCheckMate) { cout << "Black Win :)" << endl; return; }

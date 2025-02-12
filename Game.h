@@ -20,6 +20,7 @@ class Game{
     void initialBoard(Board&);
     void promotion(Board&);
     void mateWithRook(Board&);
+    void checkmateWithPromotion(Board&);
 };
 
 void Game::initialBoard(Board& board){
@@ -67,6 +68,16 @@ void Game::mateWithRook(Board& board){
     board.board[1][1] = Helper::createKing(Color::WHITE, {1, 1});
 
     board.board[7][7] = Helper::createKing(Color::BLACK, {7, 7});
+}
+
+
+
+void Game::checkmateWithPromotion(Board& board){
+    board.board[6][1] = Helper::createRook(Color::WHITE, {6, 1});
+    board.board[7][6] = Helper::createPawn(Color::WHITE, {7, 6});
+    board.board[0][7] = Helper::createKing(Color::WHITE, {0, 7});
+
+    board.board[0][0] = Helper::createKing(Color::BLACK, {0, 0});
 }
 
 void Game::startGame(){

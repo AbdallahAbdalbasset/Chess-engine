@@ -20,6 +20,7 @@ class Helper{
     static shared_ptr<Piece> createKing(Color color, pair<int, int> position);
     static Board copyBoard(Board board);
     static bool isDraw(Board& board);
+    static bool isStalemate(vector<pair<pair<int, int>, pair<pair<int, int>, int>>> moves);
     
 };
 

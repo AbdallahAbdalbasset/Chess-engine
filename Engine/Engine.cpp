@@ -75,7 +75,7 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
             }
         }
     }
-
+    if(ret.first.first == -1) ret.second.second = 0;
     return ret;
 }
 
@@ -99,6 +99,8 @@ void Engine::prepareThreadMoves(int threadId, Board board, Color color, pair<pai
 }
 
 pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Color color){
+
+    // Parallel search for each column
     const int threadsCount = 4;
 
     vector<unique_ptr<thread>> threads(threadsCount);
@@ -111,11 +113,16 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
         threads[i]->join();
     }
     
+    
     pair<pair<int, int>, pair<pair<int, int>, int>> bestMove = {{-1, -1}, {{-1, -1}, INT_MIN}};
     if(color == Color::BLACK) bestMove.second.second = INT_MAX;
 
-    vector<int> columns{1, 2, 3, 0};// giving priority to the middle moves
+    if(Helper::isStalemate(moves))return bestMove;
+
+    vector<int> columns{0, 3, 1, 2};// giving priority to the middle moves but not king
     for(int i:columns){
+        if(moves[i].first.first == -1) continue;
+
         if(color == Color::WHITE && bestMove.second.second < moves[i].second.second){
             bestMove = moves[i];
         }
@@ -123,8 +130,7 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
             bestMove = moves[i];
         }
 
-        // Prefer moves that does not lead to a king move
-        if(bestMove.first.first != -1 && bestMove.second.second == moves[i].second.second && board.board[bestMove.first.first][bestMove.first.second]->name == "K"){
+        if(bestMove.first.first != -1 && bestMove.second.second == moves[i].second.second && board.board[moves[i].first.first][moves[i].first.second]->name != "K"){
             bestMove = moves[i];
         }
     }

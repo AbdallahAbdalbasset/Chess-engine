@@ -92,8 +92,8 @@ void Helper::playMove(Board& board, pair<int, int> from, pair<int, int> to, shar
     board.prepareMoves();
 }
 
-bool Helper::Helper::isValidMove(Board board, pair<int, int> to, Color color){
-    // We chould not take our own pieces
+bool Helper::isValidMove(Board board, pair<int, int> to, Color color){
+    // We should not take our own pieces
     if(board.board[to.first][to.second] != nullptr
     && board.board[to.first][to.second]->color == color)return false;
 
@@ -184,4 +184,13 @@ bool Helper::isDraw(Board& board){
     }
 
     return true;
+}
+
+
+bool Helper::isStalemate(vector<pair<pair<int, int>, pair<pair<int, int>, int>>> moves){
+    moves.resize(unique(moves.begin(), moves.end()) - moves.begin());
+    
+    if(moves.size()!=1)return false;
+    if(moves.front().first.first == -1)return true;
+    return false;
 }

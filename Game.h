@@ -138,7 +138,7 @@ void Game::lichessBuzzleMateInThreeWithKnight(Board& board){
 
 void Game::startGame(){
     Board board;
-    knightsAndTwoRooks(board);
+    napilion(board);
 
     board.prepareMoves();
     board.printBoard();

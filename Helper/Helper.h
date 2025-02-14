@@ -22,6 +22,6 @@ class Helper{
     static Board copyBoard(Board board);
     static bool isDraw(Board& board);
     static bool isStalemate(vector<pair<pair<int, int>, pair<pair<int, int>, int>>> moves);
-    static void generateMoves(Board board, Color color, vector<pair<int, pair<pair<int, int>, pair<int, int>>>>&, int&, int);
+    static void generateMoves(Board board, Color color, vector<pair<int, pair<pair<int, int>, pair<int, int>>>>&, int&, int, int, bool);
 };
 

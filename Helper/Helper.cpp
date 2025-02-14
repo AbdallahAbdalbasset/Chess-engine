@@ -195,7 +195,7 @@ bool Helper::isStalemate(vector<pair<pair<int, int>, pair<pair<int, int>, int>>>
     return false;
 }
 
-void Helper::generateMoves(Board board, Color color, vector<pair<int, pair<pair<int, int>, pair<int, int>>>>& moves, int& size, int threadsCount){
+void Helper::generateMoves(Board board, Color color, vector<pair<int, pair<pair<int, int>, pair<int, int>>>>& moves, int& size, int threadsCount, int depth, bool onlyTakes){
     pair<int, pair<pair<int, int>, pair<int, int>>> maxMove;
     maxMove.first = INT_MIN;
 
@@ -206,6 +206,7 @@ void Helper::generateMoves(Board board, Color color, vector<pair<int, pair<pair<
 
             for(auto newPosition : board.board[i][j]->moves){
                 if(!Helper::isValidMove(board, newPosition, color)) continue;
+                if(onlyTakes && board.board[newPosition.first][newPosition.second] == nullptr) continue;
 
                 moves[size++] = {0, {{i, j}, newPosition}};
 
@@ -217,7 +218,7 @@ void Helper::generateMoves(Board board, Color color, vector<pair<int, pair<pair<
     }
 
     int temp = threadsCount - 1;
-    while(temp--&&maxMove.first !=  INT_MIN){
+    while(!depth&&temp--&&maxMove.first !=  INT_MIN){
         moves[size++] = maxMove;
     }
 

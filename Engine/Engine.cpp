@@ -8,7 +8,70 @@
 using namespace std;
 int Engine::maxDepth = 6;
 int Engine::threadsCount = 4;
+int Engine::maxValidMovesInChess = 1046;
 
+pair<pair<int, int>, pair<pair<int, int>, int>> Engine::searchTakesOnly(Board board, Color color, int alpha, int beta, int depth){
+    if(Helper::isCheck(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE)){
+        return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? INT_MAX : INT_MIN}};
+    }
+
+    if(Helper::isCheckMate(board, color)){
+        return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? INT_MIN+depth : INT_MAX-depth}};
+    }
+
+    pair<pair<int, int>, pair<pair<int, int>, int>> ret = {{-1,-1}, {{-1, -1}, getScore(board)}};
+
+    int size = 0;
+    vector<pair<int, pair<pair<int, int>, pair<int, int>>>> moves(maxValidMovesInChess);
+    Helper::generateMoves(board, color, moves, size, threadsCount, depth, true); 
+
+    if(color == Color::WHITE) alpha = max(alpha, ret.second.second);
+    else beta = min(beta, ret.second.second);
+    if(size == 0) return ret;
+
+    // Divide the moves among threads
+    int start = 0;
+    int increment = 1;
+
+    for(int i = start;i<size;i+=increment){
+        int row = moves[i].second.first.first;
+        int col = moves[i].second.first.second;
+        pair<int, int> newPosition = moves[i].second.second;
+
+        // Try this move
+        shared_ptr<Piece> fromPiece = board.board[row][col];
+        shared_ptr<Piece> toPiece = board.board[newPosition.first][newPosition.second];
+        Helper::playMove(board, {row, col}, newPosition, fromPiece, nullptr);
+
+        // Recursively call getMove for the opponent's turn
+        auto tempRes = searchTakesOnly(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE, alpha, beta, depth+1);
+                
+        // Min-Max with Alpha-Beta pruning
+        if(color == Color::WHITE){
+            if(tempRes.second.second > ret.second.second) {
+                ret = tempRes;
+                ret.first = {row, col};
+                ret.second.first = newPosition;
+                alpha = max(alpha, ret.second.second);
+            }
+        }else {
+            if(tempRes.second.second < ret.second.second) {
+                ret = tempRes;
+                ret.first = {row, col};
+                ret.second.first = newPosition;
+                beta = min(beta, ret.second.second);
+            }
+        }
+                
+        // Undo this move
+        Helper::playMove(board, newPosition, {row, col}, fromPiece, toPiece);
+
+        if(beta <= alpha) return ret;
+    }
+    
+    return ret;
+
+}
 pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Color color, int depth, int alpha, int beta, int threadId){
 
     if(Helper::isCheck(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE)){
@@ -20,17 +83,15 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
     }
 
     if(depth == maxDepth){
-        int score = getScore(board);
-        return {{-1, -1}, {{-1, -1}, score}};
+        return searchTakesOnly(board, color, alpha, beta, depth+1);
     }
 
     pair<pair<int, int>, pair<pair<int, int>, int>> ret = {{-1,-1}, {{-1, -1}, INT_MAX}};
     if(color == Color::WHITE) ret.second.second = INT_MIN;
     
-    const int maxValidMovesInChess = 1046;
     int size = 0;
     vector<pair<int, pair<pair<int, int>, pair<int, int>>>> moves(maxValidMovesInChess);
-    Helper::generateMoves(board, color, moves, size, threadsCount); 
+    Helper::generateMoves(board, color, moves, size, threadsCount, depth, false); 
 
     // Divide the moves among threads
     int start = 0;

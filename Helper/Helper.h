@@ -3,6 +3,7 @@
 #include "../Board/Pieces/Headers/Piece.h"
 #include "enum.h"
 
+
 class Helper{
     public:
     static bool isInBoard(int i, int j);
@@ -21,6 +22,6 @@ class Helper{
     static Board copyBoard(Board board);
     static bool isDraw(Board& board);
     static bool isStalemate(vector<pair<pair<int, int>, pair<pair<int, int>, int>>> moves);
-    
+    static void generateMoves(Board board, Color color, vector<pair<int, pair<pair<int, int>, pair<int, int>>>>&, int&, int);
 };
 

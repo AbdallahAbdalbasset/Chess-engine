@@ -11,6 +11,7 @@
 #include "enum.h"
 
 using namespace std;
+
 bool Helper::isInBoard(int i, int j){
     return (i>=0 && i<8 && j>=0 && j<8);
 }
@@ -186,11 +187,39 @@ bool Helper::isDraw(Board& board){
     return true;
 }
 
-
 bool Helper::isStalemate(vector<pair<pair<int, int>, pair<pair<int, int>, int>>> moves){
     moves.resize(unique(moves.begin(), moves.end()) - moves.begin());
     
     if(moves.size()!=1)return false;
     if(moves.front().first.first == -1)return true;
     return false;
+}
+
+void Helper::generateMoves(Board board, Color color, vector<pair<int, pair<pair<int, int>, pair<int, int>>>>& moves, int& size, int threadsCount){
+    pair<int, pair<pair<int, int>, pair<int, int>>> maxMove;
+    maxMove.first = INT_MIN;
+
+    for(int i = 0;i<8;i++){
+        for(int j = 0;j<8;j++){
+            if(board.board[i][j] == nullptr) continue;
+            if(board.board[i][j]->color != color) continue;
+
+            for(auto newPosition : board.board[i][j]->moves){
+                if(!Helper::isValidMove(board, newPosition, color)) continue;
+
+                moves[size++] = {0, {{i, j}, newPosition}};
+
+                if(board.board[newPosition.first][newPosition.second] == nullptr) continue;
+                moves[size-1].first = max(1, board.board[newPosition.first][newPosition.second]->value + 1 - board.board[i][j]->value);
+                maxMove = max(maxMove, moves[size - 1]);
+            }
+        }
+    }
+
+    int temp = threadsCount - 1;
+    while(temp--&&maxMove.first !=  INT_MIN){
+        moves[size++] = maxMove;
+    }
+
+    sort(moves.begin(), moves.begin()+size, greater<pair<int, pair<pair<int, int>, pair<int, int>>>>());
 }

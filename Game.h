@@ -21,6 +21,9 @@ class Game{
     void promotion(Board&);
     void mateWithRook(Board&);
     void checkmateWithPromotion(Board&);
+    void twoPawnsOn6(Board&);
+    void lichessBuzzleMateInThree(Board&);
+    void lichessBuzzleMateInThreeWithKnight(Board&);
 };
 
 void Game::initialBoard(Board& board){
@@ -78,6 +81,59 @@ void Game::checkmateWithPromotion(Board& board){
     board.board[0][7] = Helper::createKing(Color::WHITE, {0, 7});
 
     board.board[0][0] = Helper::createKing(Color::BLACK, {0, 0});
+}
+
+
+void Game::twoPawnsOn6(Board& board){
+    board.board[0][0] = Helper::createKing(Color::WHITE, {0, 0});
+
+    board.board[7][0] = Helper::createKing(Color::BLACK, {7, 0});
+    board.board[7][6] = Helper::createPawn(Color::WHITE, {7, 6});
+    board.board[6][6] = Helper::createPawn(Color::WHITE, {6, 6});
+}
+
+void Game::lichessBuzzleMateInThree(Board& board){
+    board.board[7][1] = Helper::createPawn(Color::WHITE, {7, 1});
+    board.board[6][1] = Helper::createPawn(Color::WHITE, {6, 1});
+    board.board[5][1] = Helper::createPawn(Color::WHITE, {5, 1});
+
+    board.board[6][0] = Helper::createKing(Color::WHITE, {6, 0});
+
+    board.board[3][2] = Helper::createBishop(Color::WHITE, {3, 2});
+    board.board[6][4] = Helper::createBishop(Color::WHITE, {6, 4});
+
+    board.board[7][2] = Helper::createRook(Color::WHITE, {7, 2});
+    
+    board.board[3][4] = Helper::createKnight(Color::WHITE, {3, 4});
+
+
+    board.board[7][5] = Helper::createPawn(Color::BLACK, {7, 5});
+    board.board[6][6] = Helper::createPawn(Color::BLACK, {6, 6});
+    board.board[5][6] = Helper::createPawn(Color::BLACK, {5, 6});
+    board.board[4][5] = Helper::createPawn(Color::BLACK, {4, 5});
+
+    board.board[6][7] = Helper::createKing(Color::BLACK, {6, 7});
+
+    board.board[5][7] = Helper::createRook(Color::BLACK, {5, 7});
+
+    board.board[2][7] = Helper::createBishop(Color::BLACK, {2, 7});
+    board.board[4][6] = Helper::createBishop(Color::BLACK, {4, 6});
+
+    board.board[0][4] = Helper::createQueen(Color::BLACK, {0, 4});
+    board.board[1][3] = Helper::createRook(Color::BLACK, {1, 3});
+
+    board.board[4][4] = Helper::createKnight(Color::BLACK, {4, 4});
+}
+
+void Game::lichessBuzzleMateInThreeWithKnight(Board& board){
+    board.board[7][2] = Helper::createPawn(Color::WHITE, {7, 2});
+    board.board[7][0] = Helper::createKing(Color::WHITE, {7, 0});
+    board.board[6][1] = Helper::createBishop(Color::WHITE, {6, 1});
+    board.board[6][0] = Helper::createRook(Color::WHITE, {7, 0});
+
+    board.board[4][4] = Helper::createBishop(Color::BLACK, {4, 4});
+    board.board[4][1] = Helper::createKnight(Color::BLACK, {4, 1});
+    board.board[6][7] = Helper::createKing(Color::BLACK, {6, 7});
 }
 
 void Game::startGame(){

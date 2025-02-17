@@ -228,21 +228,19 @@ void Game::testFullGame() {
     mp[6] = 'G';
     mp[7] = 'H';
     int x;
-    while(cin>>x){
+    while(1){
         auto move = Engine::getMove(board, turn?Color::WHITE:Color::BLACK);
         
-        cout<<cnt<<" "<<(turn ? "WHITE" : "BLACK")<<" ";
-        cout<<board.board[move.first.first][move.first.second]->name<<" "<<mp[move.first.first]<<move.first.second+1<<" "<<mp[move.second.first.first]<<move.second.first.second+1<<endl;
-        if(move.first.first==-1||Helper::isDraw(board)){cout<<"End"<<endl;return;}
-
-        Helper::playMove(board, turn?Color::WHITE:Color::BLACK, move.first, move.second.first, board.board[move.first.first][move.first.second], nullptr);
+        if(move.second.first.first == KING_SIDE_CASLE||move.second.first.first==QUEEN_SIDE_CASLE)
+            Helper::playMove(board,turn?Color::WHITE:Color::BLACK, move.first, move.second.first, nullptr, nullptr);
+        else if(move.first.first != -1)
+            Helper::playMove(board, turn?Color::WHITE:Color::BLACK, move.first, move.second.first, board.board[move.first.first][move.first.second], nullptr);
+        else{
+            cout<<"No moves"<<endl;
+            return;
+        }
         board.printBoard();
         cnt++;
         turn = !turn;
-        cout<<Engine::getScore(board)<<endl;
-        cout<<board.canKingSideCasle(Color::WHITE)<<endl;
-        cout<<board.canQueenSideCasle(Color::WHITE)<<endl;
-        cout<<board.canKingSideCasle(Color::BLACK)<<endl;
-        cout<<board.canQueenSideCasle(Color::BLACK)<<endl;
     }
 }

@@ -26,9 +26,9 @@ void Board::initializeBoard(){
     }
 
     board[0][0] = Helper::createRook(WHITE, {0, 0});
-    board[7][0] = Helper::createRook(WHITE, {0, 7});
+    board[7][0] = Helper::createRook(WHITE, {7, 0});
 
-    board[0][7] = Helper::createRook(BLACK, {7, 0});
+    board[0][7] = Helper::createRook(BLACK, {0, 7});
     board[7][7] = Helper::createRook(BLACK, {7, 7});
 
     board[1][0] = Helper::createKnight(WHITE, {1, 0});
@@ -110,15 +110,15 @@ void Board::prepareMoves(){
 bool Board::canKingSideCasle(Color color){
     if(color == Color::WHITE){
         if(!whiteKingSideCasle) return false;
-        cout<<"nokingorrookmove"<<endl;
+        
         if(board[4][0]==nullptr||board[7][0]==nullptr)return false;
         if(board[4][0]->name != "K" || board[7][0]->name != "R") return false;
-        cout<<"kingandrookareinthirpositions"<<endl;
+        
         if(Helper::isCheck(*this, Color::WHITE)) return false;
-        cout<<"nockeck"<<endl;
+        
         int i = 5;
         while(i<7) if(board[i++][0]!=nullptr)return false;
-        cout<<"emptybeteen"<<endl;
+        
         i = 5;
         while(i<7){
             board[i][0] = board[4][0];
@@ -132,14 +132,17 @@ bool Board::canKingSideCasle(Color color){
             i++;
             if(check)return false;
         } 
-        cout<<"safebetween"<<endl;
     }else{
         if(!blackKingSideCasle) return false;
+        
         if(board[4][7]==nullptr||board[7][7]==nullptr)return false;
         if(board[4][7]->name != "K" || board[7][7]->name != "R") return false;
+        
         if(Helper::isCheck(*this, Color::BLACK)) return false;
+        
         int i = 5;
         while(i<7) if(board[i++][7]!=nullptr)return false;
+        
         i = 5;
         while(i<7){
             board[i][7] = board[4][7];
@@ -161,11 +164,15 @@ bool Board::canKingSideCasle(Color color){
 bool Board::canQueenSideCasle(Color color){
     if(color == Color::WHITE){
         if(!whiteQueenSideCasle) return false;
+        
         if(board[4][0]==nullptr||board[0][0]==nullptr)return false;
         if(board[4][0]->name != "K" || board[0][0]->name != "R") return false;
+        
         if(Helper::isCheck(*this, Color::WHITE)) return false;
+        
         int i = 1;
         while(i<4) if(board[i++][0]!=nullptr)return false;
+        
         i = 1;
         while(i<4){
             board[i][0] = board[4][0];
@@ -181,11 +188,15 @@ bool Board::canQueenSideCasle(Color color){
         }        
     }else{
         if(!blackQueenSideCasle) return false;
+        
         if(board[4][7]==nullptr||board[0][7]==nullptr)return false;
         if(board[4][7]->name != "K" || board[0][7]->name != "R") return false;
+        
         if(Helper::isCheck(*this, Color::BLACK)) return false;
+        
         int i = 1;
         while(i<4) if(board[i++][7]!=nullptr)return false;
+        
         i = 1;
         while(i<4){
             board[i][7] = board[4][7];

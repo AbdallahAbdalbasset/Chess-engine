@@ -8,7 +8,7 @@
 
 using namespace std;
 int Engine::maxDepth = 2;
-int Engine::threadsCount = 1;
+int Engine::threadsCount = 4;
 int Engine::maxValidMovesInChess = 1046;
 
 pair<pair<int, int>, pair<pair<int, int>, int>> Engine::searchTakesOnly(Board board, Color color, int alpha, int beta, int depth){
@@ -108,13 +108,20 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
         int row = moves[i].second.first.first;
         int col = moves[i].second.first.second;
         pair<int, int> newPosition = moves[i].second.second;
-
-        bool isPawn = board.board[row][col]->name == "P"?true:false;
-        // Try this move
-        shared_ptr<Piece> fromPiece = board.board[row][col];
-        shared_ptr<Piece> toPiece = board.board[newPosition.first][newPosition.second];
+        
+        bool isPawn = false;
+        shared_ptr<Piece> fromPiece;
+        shared_ptr<Piece> toPiece;
         vector<bool> casleData = {board.whiteKingSideCasle, board.whiteQueenSideCasle, board.blackKingSideCasle, board.blackQueenSideCasle};
+        if(Helper::isInBoard(row, col)&&board.board[row][col]!=nullptr){
+            isPawn = board.board[row][col]->name == "P"?true:false;
+            fromPiece = board.board[row][col];
+            toPiece = board.board[newPosition.first][newPosition.second];
+        }
+        
+        // Try this move
         Helper::playMove(board, color, {row, col}, newPosition, fromPiece, nullptr);
+        
         // Recursively call getMove for the opponent's turn
         auto tempRes = search(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE, depth + 1, alpha, beta, threadId);
                 
@@ -137,8 +144,8 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
                 
         // Pawn promotion in nearset move
         if(tempRes.second.second == ret.second.second){            
-            if((color == Color::WHITE && col == 6) || (color == Color::BLACK && col == 1) 
-            && isPawn){
+            if(((color == Color::WHITE && col == 6) || (color == Color::BLACK && col == 1)
+                )&& isPawn){
                 ret = tempRes;
                 ret.first = {row, col};
                 ret.second.first = newPosition;
@@ -153,7 +160,7 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
     
 
     // If no legal moves, return stalemate
-    if(ret.first.first == -1) ret.second.second = 0;
+    if(ret.second.first.first == -1) ret.second.second = 0;
     return ret;
 }
 
@@ -192,11 +199,12 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
     
     pair<pair<int, int>, pair<pair<int, int>, int>> bestMove = {{-1, -1}, {{-1, -1}, INT_MIN}};
     if(color == Color::BLACK) bestMove.second.second = INT_MAX;
-
+    
     if(Helper::isStalemate(moves))return bestMove;
 
     for(int i = 0;i<threadsCount;i++){
-        if(moves[i].first.first == -1) continue;
+        
+        if(moves[i].second.first.first == -1) continue;
 
         if(color == Color::WHITE && bestMove.second.second < moves[i].second.second){
             bestMove = moves[i];
@@ -205,8 +213,8 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
             bestMove = moves[i];
         }
 
-        if(moves[i].first.first != -1 && moves[i] != bestMove && moves[i].second.second == bestMove.second.second){
-            if((color == Color::WHITE && moves[i].first.second == 6) || (color == Color::BLACK && moves[i].first.second == 1) && board.board[moves[i].first.first][moves[i].first.second]->name == "P")
+        if(moves[i].second.first.first != -1 && moves[i] != bestMove && moves[i].second.second == bestMove.second.second){
+            if(((color == Color::WHITE && moves[i].first.second == 6) || (color == Color::BLACK && moves[i].first.second == 1)) && board.board[moves[i].first.first][moves[i].first.second]->name == "P")
                 bestMove = moves[i];
         }
     }

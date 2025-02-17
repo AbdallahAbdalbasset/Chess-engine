@@ -3,9 +3,7 @@
 #define BLACKCHECKMATE INT_MIN+1
 #define DRAW 0
 #define KING_SIDE_CASLE 100
-#define KING_SIDE_UNCASLE 101
 #define QUEEN_SIDE_CASLE 200
-#define QUEEN_SIDE_UNCASLE 201
 
 
 enum Color{

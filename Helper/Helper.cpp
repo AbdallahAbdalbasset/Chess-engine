@@ -36,8 +36,6 @@ bool Helper::isCheck(Board& board, Color color){
                 if(!Helper::isInBoard(newPositoin.first, newPositoin.second))continue;
                 if(board.board[newPositoin.first][newPositoin.second] == nullptr) continue;
                 if(board.board[newPositoin.first][newPositoin.second]->color != color) continue;
-                cout<<row<<col<<" "<<newPositoin.first<<" "<<newPositoin.second<<endl;
-                cout<<board.board[row][col]->name<<endl;
                 if(board.board[newPositoin.first][newPositoin.second]->name=="K") return true;
             }
         }
@@ -89,6 +87,7 @@ void Helper::kingSideCasle(Board& board, Color color){
         board.board[7][0] = nullptr;
         board.board[6][0]->position = {6, 0};
         board.board[5][0]->position = {5, 0};
+        
     }else{
         assert(board.board[4][7]->name == "K"&&board.board[7][7]->name == "R");
         board.blackKingSideCasle = false;
@@ -168,10 +167,7 @@ void Helper::queenSideUncasle(Board& board, Color color){
     
 }
 
-void Helper::playMove(Board& board, Color color, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> fromPiece, shared_ptr<Piece> toPiece){    
-    assert(isInBoard(from.first, from.second));
-    assert(isInBoard(to.first, to.second));
-    assert(board.board[from.first][from.second]!=nullptr);
+void Helper::playMove(Board& board, Color color, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> fromPiece, shared_ptr<Piece> toPiece){
 
     if(to.first == KING_SIDE_CASLE) {kingSideCasle(board, color);}
     else if(to.first == QUEEN_SIDE_CASLE) {queenSideCasle(board, color);}
@@ -214,12 +210,9 @@ void Helper::playMove(Board& board, Color color, pair<int, int> from, pair<int, 
 }
 
 void Helper::unPlayMove(Board& board, Color color, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> fromPiece, shared_ptr<Piece> toPiece, vector<bool>& casleData){    
-    assert(isInBoard(from.first, from.second));
-    assert(isInBoard(to.first, to.second));
-    assert(board.board[from.first][from.second]!=nullptr);
 
-    if(to.first == KING_SIDE_CASLE) {kingSideUncasle(board, color);}
-    else if(to.first == QUEEN_SIDE_CASLE) {queenSideUncasle(board, color);}
+    if(from.first == KING_SIDE_CASLE) {kingSideUncasle(board, color);}
+    else if(from.first == QUEEN_SIDE_CASLE) {queenSideUncasle(board, color);}
     else{
         if(fromPiece) fromPiece->position = to;
         board.board[to.first][to.second] = fromPiece;
@@ -340,7 +333,7 @@ bool Helper::isStalemate(vector<pair<pair<int, int>, pair<pair<int, int>, int>>>
     moves.resize(unique(moves.begin(), moves.end()) - moves.begin());
     
     if(moves.size()!=1)return false;
-    if(moves.front().first.first == -1)return true;
+    if(moves.front().second.first.first == -1)return true;
     return false;
 }
 

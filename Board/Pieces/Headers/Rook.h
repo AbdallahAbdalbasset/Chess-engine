@@ -12,7 +12,7 @@ class Rook : public Piece{
 	   -5, 0, 0, 0, 0, 0, 0,-5,
 	   -5, 0, 0, 0, 0, 0, 0,-5,
 	   -5, 0, 0, 0, 0, 0, 0,-5,
-		0, 0, 0, 5, 5, 0, 0, 0
+	    0,-1, 0, 5, 5,-1,-1, 0
 	};
     void prepareMoves(Board&);
     int getValue();

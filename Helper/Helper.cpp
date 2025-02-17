@@ -36,7 +36,8 @@ bool Helper::isCheck(Board& board, Color color){
                 if(!Helper::isInBoard(newPositoin.first, newPositoin.second))continue;
                 if(board.board[newPositoin.first][newPositoin.second] == nullptr) continue;
                 if(board.board[newPositoin.first][newPositoin.second]->color != color) continue;
-
+                cout<<row<<col<<" "<<newPositoin.first<<" "<<newPositoin.second<<endl;
+                cout<<board.board[row][col]->name<<endl;
                 if(board.board[newPositoin.first][newPositoin.second]->name=="K") return true;
             }
         }
@@ -62,12 +63,13 @@ bool Helper::isCheckMate(Board board, Color color){
                 // Try this move
                 shared_ptr<Piece> fromPiece = board.board[row][col];
                 shared_ptr<Piece> toPiece = board.board[newPosition.first][newPosition.second];
-                Helper::playMove(board, {row, col}, newPosition, fromPiece, nullptr);
-
+                vector<bool> casleData = {board.whiteKingSideCasle, board.whiteQueenSideCasle, board.blackKingSideCasle, board.blackQueenSideCasle};
+                Helper::playMove(board, color, {row, col}, newPosition, fromPiece, nullptr);
+                                
                 if(!isCheck(board, color)) isNotcheckMate = true;
 
                 // Undo this move
-                Helper::playMove(board, newPosition, {row, col}, fromPiece, toPiece);
+                Helper::unPlayMove(board, color, newPosition, {row, col}, fromPiece, toPiece, casleData);
 
                 if(isNotcheckMate) return false;
             }
@@ -76,21 +78,163 @@ bool Helper::isCheckMate(Board board, Color color){
     return true;
 }
 
-void Helper::playMove(Board& board, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> fromPiece, shared_ptr<Piece> toPiece){    
+void Helper::kingSideCasle(Board& board, Color color){
+    if(color == Color::WHITE){
+        assert(board.board[4][0]->name == "K"&&board.board[7][0]->name == "R");
+        board.whiteKingSideCasle = false;
+        board.whiteQueenSideCasle = false;
+        board.board[6][0] = board.board[4][0];
+        board.board[5][0] = board.board[7][0];
+        board.board[4][0] = nullptr;
+        board.board[7][0] = nullptr;
+        board.board[6][0]->position = {6, 0};
+        board.board[5][0]->position = {5, 0};
+    }else{
+        assert(board.board[4][7]->name == "K"&&board.board[7][7]->name == "R");
+        board.blackKingSideCasle = false;
+        board.blackQueenSideCasle = false;
+        board.board[6][7] = board.board[4][7];
+        board.board[5][7] = board.board[7][7];
+        board.board[7][7] = nullptr;
+        board.board[4][7] = nullptr;
+        board.board[6][7]->position = {6, 7};
+        board.board[5][7]->position = {5, 7};
+    }
+
+}
+void Helper::queenSideCasle(Board& board, Color color){
+    if(color == Color::WHITE){
+        assert(board.board[4][0]->name == "K"&&board.board[0][0]->name == "R");
+        board.whiteKingSideCasle = false;
+        board.whiteQueenSideCasle = false;
+        board.board[2][0] = board.board[4][0];
+        board.board[3][0] = board.board[0][0];
+        board.board[4][0] = nullptr;
+        board.board[0][0] = nullptr;
+        board.board[2][0]->position = {2, 0};
+        board.board[3][0]->position = {3, 0};
+    }else{
+        assert(board.board[4][7]->name == "K"&&board.board[0][7]->name == "R");
+        board.blackKingSideCasle = false;
+        board.blackQueenSideCasle = false;
+        board.board[2][7] = board.board[4][7];
+        board.board[3][7] = board.board[0][7];
+        board.board[4][7] = nullptr;
+        board.board[0][7] = nullptr;
+        board.board[2][7]->position = {2, 7};
+        board.board[3][7]->position = {3, 7};
+    }
+
+}
+void Helper::kingSideUncasle(Board& board, Color color){
+    if(color == Color::WHITE){
+        assert(board.board[6][0]->name == "K"&&board.board[5][0]->name == "R");
+        board.board[4][0] = board.board[6][0];
+        board.board[7][0] = board.board[5][0];
+        board.board[6][0] = nullptr;
+        board.board[5][0] = nullptr;
+        board.board[4][0]->position = {4, 0};
+        board.board[7][0]->position = {7, 0};
+    }else{
+        assert(board.board[6][7]->name == "K"&&board.board[5][7]->name == "R");
+        board.board[4][7] = board.board[6][7];
+        board.board[7][7] = board.board[5][7];
+        board.board[6][7] = nullptr;
+        board.board[5][7] = nullptr;
+        board.board[4][7]->position = {4, 7};
+        board.board[7][7]->position = {7, 7};
+    }
+}
+
+void Helper::queenSideUncasle(Board& board, Color color){
+    if(color == Color::WHITE){
+        assert(board.board[2][0]->name == "K"&&board.board[3][0]->name == "R");
+        board.board[4][0] = board.board[2][0];
+        board.board[0][0] = board.board[3][0];
+        board.board[2][0] = nullptr;
+        board.board[3][0] = nullptr;
+        board.board[4][0]->position = {4, 0};
+        board.board[0][0]->position = {0, 0};
+    }else{
+        assert(board.board[2][7]->name == "K"&&board.board[3][7]->name == "R");
+        board.board[4][7] = board.board[2][7];
+        board.board[0][7] = board.board[3][7];
+        board.board[2][7] = nullptr;
+        board.board[3][7] = nullptr;
+        board.board[4][7]->position = {4, 7};
+        board.board[0][7]->position = {0, 7};
+    }
+
+    
+}
+
+void Helper::playMove(Board& board, Color color, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> fromPiece, shared_ptr<Piece> toPiece){    
     assert(isInBoard(from.first, from.second));
     assert(isInBoard(to.first, to.second));
     assert(board.board[from.first][from.second]!=nullptr);
 
-    if(fromPiece) fromPiece->position = to;
-    board.board[to.first][to.second] = fromPiece;
+    if(to.first == KING_SIDE_CASLE) {kingSideCasle(board, color);}
+    else if(to.first == QUEEN_SIDE_CASLE) {queenSideCasle(board, color);}
+    else{
+        if(fromPiece) fromPiece->position = to;
+        board.board[to.first][to.second] = fromPiece;
     
-    if(toPiece) toPiece->position = from;
-    board.board[from.first][from.second] = toPiece;
+        if(toPiece) toPiece->position = from;
+        board.board[from.first][from.second] = toPiece;
 
-    if(fromPiece && (to.second == 0 || to.second == 7) && fromPiece->name == "P"){// Promotion
-        board.board[to.first][to.second] = createQueen(fromPiece->color, fromPiece->position);
+        if(fromPiece && (to.second == 0 || to.second == 7) && fromPiece->name == "P"){// Promotion
+            board.board[to.first][to.second] = createQueen(fromPiece->color, fromPiece->position);
+        }
+
+        if(board.board[from.first][from.second]&&board.board[from.first][from.second]->name == "K"){
+            if(color == Color::WHITE){
+                board.whiteKingSideCasle = false;
+                board.whiteQueenSideCasle = false;
+            }else{
+                board.blackKingSideCasle = false;
+                board.blackQueenSideCasle = false;
+            }
+        }
+
+        if(board.board[from.first][from.second]&&board.board[from.first][from.second]->name == "R"){
+            if(color == Color::WHITE){
+                if(from.first == 0&&from.second == 7) board.whiteKingSideCasle = false;
+                else if(from.first == 0&&from.second == 0) board.whiteQueenSideCasle = false;
+            }else{
+                if(from.first == 7&&from.second == 7) board.blackKingSideCasle = false;
+                else if(from.first == 7&&from.second == 0) board.blackQueenSideCasle = false;
+            }
+
+        }
     }
+
     board.prepareMoves();
+
+    
+}
+
+void Helper::unPlayMove(Board& board, Color color, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> fromPiece, shared_ptr<Piece> toPiece, vector<bool>& casleData){    
+    assert(isInBoard(from.first, from.second));
+    assert(isInBoard(to.first, to.second));
+    assert(board.board[from.first][from.second]!=nullptr);
+
+    if(to.first == KING_SIDE_CASLE) {kingSideUncasle(board, color);}
+    else if(to.first == QUEEN_SIDE_CASLE) {queenSideUncasle(board, color);}
+    else{
+        if(fromPiece) fromPiece->position = to;
+        board.board[to.first][to.second] = fromPiece;
+    
+        if(toPiece) toPiece->position = from;
+        board.board[from.first][from.second] = toPiece;
+    }
+
+    board.whiteKingSideCasle = casleData[0];
+    board.whiteQueenSideCasle = casleData[1];
+    board.blackKingSideCasle = casleData[2];
+    board.blackQueenSideCasle = casleData[3];
+
+    board.prepareMoves();
+
 }
 
 bool Helper::isValidMove(Board board, pair<int, int> to, Color color){
@@ -157,6 +301,11 @@ shared_ptr<Piece> Helper::createKing(Color color, pair<int, int> position){
 
 Board Helper::copyBoard(Board board){
     Board copy;
+    copy.whiteKingSideCasle = board.whiteKingSideCasle;
+    copy.whiteQueenSideCasle = board.whiteQueenSideCasle;
+    copy.blackKingSideCasle = board.blackKingSideCasle;
+    copy.blackQueenSideCasle = board.blackKingSideCasle;
+    copy.lastMove = board.lastMove;
     
     for(int i = 0;i<8;i++){
         for(int j = 0;j<8;j++){
@@ -219,10 +368,16 @@ void Helper::generateMoves(Board board, Color color, vector<pair<int, pair<pair<
         }
     }
 
+    if(!onlyTakes){
+        if(board.canKingSideCasle(color)) moves[size++] = {2, {{-1, -1}, {KING_SIDE_CASLE, -1}}};
+        if(board.canQueenSideCasle(color)) moves[size++] = {2, {{-1, -1}, {QUEEN_SIDE_CASLE, -1}}};
+    }
+
     int temp = threadsCount - 1;
     while(!depth&&temp--&&maxMove.first !=  INT_MIN){
         moves[size++] = maxMove;
     }
 
     sort(moves.begin(), moves.begin()+size, greater<pair<int, pair<pair<int, int>, pair<int, int>>>>());
+
 }

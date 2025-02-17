@@ -3,10 +3,11 @@
 #include "../Helper/Helper.h"
 #include <thread>
 #include <memory>
+#include "../Helper/enum.h"
 #include <iostream>
 
 using namespace std;
-int Engine::maxDepth = 1;
+int Engine::maxDepth = 2;
 int Engine::threadsCount = 1;
 int Engine::maxValidMovesInChess = 1046;
 
@@ -41,8 +42,9 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::searchTakesOnly(Board bo
         // Try this move
         shared_ptr<Piece> fromPiece = board.board[row][col];
         shared_ptr<Piece> toPiece = board.board[newPosition.first][newPosition.second];
-        Helper::playMove(board, {row, col}, newPosition, fromPiece, nullptr);
-
+        vector<bool> casleData = {board.whiteKingSideCasle, board.whiteQueenSideCasle, board.blackKingSideCasle, board.blackQueenSideCasle};
+        Helper::playMove(board, color, {row, col}, newPosition, fromPiece, nullptr);
+        
         // Recursively call getMove for the opponent's turn
         auto tempRes = searchTakesOnly(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE, alpha, beta, depth+1);
                 
@@ -64,7 +66,7 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::searchTakesOnly(Board bo
         }
                 
         // Undo this move
-        Helper::playMove(board, newPosition, {row, col}, fromPiece, toPiece);
+        Helper::unPlayMove(board, color, newPosition, {row, col}, fromPiece, toPiece, casleData);
 
         if(beta <= alpha) return ret;
     }
@@ -111,8 +113,8 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
         // Try this move
         shared_ptr<Piece> fromPiece = board.board[row][col];
         shared_ptr<Piece> toPiece = board.board[newPosition.first][newPosition.second];
-        Helper::playMove(board, {row, col}, newPosition, fromPiece, nullptr);
-
+        vector<bool> casleData = {board.whiteKingSideCasle, board.whiteQueenSideCasle, board.blackKingSideCasle, board.blackQueenSideCasle};
+        Helper::playMove(board, color, {row, col}, newPosition, fromPiece, nullptr);
         // Recursively call getMove for the opponent's turn
         auto tempRes = search(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE, depth + 1, alpha, beta, threadId);
                 
@@ -144,7 +146,7 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
         }
 
         // Undo this move
-        Helper::playMove(board, newPosition, {row, col}, fromPiece, toPiece);
+        Helper::unPlayMove(board, color, newPosition, {row, col}, fromPiece, toPiece, casleData);
 
         if(beta <= alpha) return ret;
     }

@@ -174,7 +174,7 @@ void Game::startGame(){
                 duration = chrono::duration_cast<chrono::microseconds>(end - start);
 
                 if(ret.first.first == -1) {cout<<"StaleMate "<<endl; return; }
-                Helper::playMove(board, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
+                Helper::playMove(board, board.board[ret.first.first][ret.first.second]->color, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
             }else if(c == 2){// black move
                 cout<<"Calculating..."<<endl;
 
@@ -186,12 +186,12 @@ void Game::startGame(){
                 duration = chrono::duration_cast<chrono::microseconds>(end - start);
 
                 if(ret.first.first == -1) {cout<<"StaleMate "<<endl; return; }
-                Helper::playMove(board, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
+                Helper::playMove(board, board.board[ret.first.first][ret.first.second]->color, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
             }else{// Play a move manually
                 cout<<"Enter the from and to positions: ";
 
                 cin>>from.first>>from.second>>to.first>>to.second;
-                Helper::playMove(board, from, to, board.board[from.first][from.second], nullptr);
+                Helper::playMove(board, board.board[ret.first.first][ret.first.second]->color, from, to, board.board[from.first][from.second], nullptr);
                 ret.second.second = 1;
             }
             board.prepareMoves();
@@ -228,7 +228,6 @@ void Game::testFullGame() {
     mp[6] = 'G';
     mp[7] = 'H';
     int x;
-    board.board[3][0] = nullptr;
     while(cin>>x){
         auto move = Engine::getMove(board, turn?Color::WHITE:Color::BLACK);
         
@@ -236,10 +235,14 @@ void Game::testFullGame() {
         cout<<board.board[move.first.first][move.first.second]->name<<" "<<mp[move.first.first]<<move.first.second+1<<" "<<mp[move.second.first.first]<<move.second.first.second+1<<endl;
         if(move.first.first==-1||Helper::isDraw(board)){cout<<"End"<<endl;return;}
 
-        Helper::playMove(board, move.first, move.second.first, board.board[move.first.first][move.first.second], nullptr);
+        Helper::playMove(board, turn?Color::WHITE:Color::BLACK, move.first, move.second.first, board.board[move.first.first][move.first.second], nullptr);
         board.printBoard();
         cnt++;
         turn = !turn;
         cout<<Engine::getScore(board)<<endl;
+        cout<<board.canKingSideCasle(Color::WHITE)<<endl;
+        cout<<board.canQueenSideCasle(Color::WHITE)<<endl;
+        cout<<board.canKingSideCasle(Color::BLACK)<<endl;
+        cout<<board.canQueenSideCasle(Color::BLACK)<<endl;
     }
 }

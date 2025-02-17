@@ -106,3 +106,100 @@ void Board::prepareMoves(){
         board[kingPostion.first][kingPostion.second]->moves = kingMoves;
     }
 }
+
+bool Board::canKingSideCasle(Color color){
+    if(color == Color::WHITE){
+        if(!whiteKingSideCasle) return false;
+        cout<<"nokingorrookmove"<<endl;
+        if(board[4][0]==nullptr||board[7][0]==nullptr)return false;
+        if(board[4][0]->name != "K" || board[7][0]->name != "R") return false;
+        cout<<"kingandrookareinthirpositions"<<endl;
+        if(Helper::isCheck(*this, Color::WHITE)) return false;
+        cout<<"nockeck"<<endl;
+        int i = 5;
+        while(i<7) if(board[i++][0]!=nullptr)return false;
+        cout<<"emptybeteen"<<endl;
+        i = 5;
+        while(i<7){
+            board[i][0] = board[4][0];
+            board[4][0] = nullptr;
+
+            bool check = Helper::isCheck(*this, Color::WHITE);
+
+            board[4][0] = board[i][0];
+            board[i][0] = nullptr;
+
+            i++;
+            if(check)return false;
+        } 
+        cout<<"safebetween"<<endl;
+    }else{
+        if(!blackKingSideCasle) return false;
+        if(board[4][7]==nullptr||board[7][7]==nullptr)return false;
+        if(board[4][7]->name != "K" || board[7][7]->name != "R") return false;
+        if(Helper::isCheck(*this, Color::BLACK)) return false;
+        int i = 5;
+        while(i<7) if(board[i++][7]!=nullptr)return false;
+        i = 5;
+        while(i<7){
+            board[i][7] = board[4][7];
+            board[4][7] = nullptr;
+
+            bool check = Helper::isCheck(*this, Color::BLACK);
+
+            board[4][7] = board[i][7];
+            board[i][7] = nullptr;
+
+            i++;
+            if(check) return false;
+        }
+    }
+
+    return true;
+}
+
+bool Board::canQueenSideCasle(Color color){
+    if(color == Color::WHITE){
+        if(!whiteQueenSideCasle) return false;
+        if(board[4][0]==nullptr||board[0][0]==nullptr)return false;
+        if(board[4][0]->name != "K" || board[0][0]->name != "R") return false;
+        if(Helper::isCheck(*this, Color::WHITE)) return false;
+        int i = 1;
+        while(i<4) if(board[i++][0]!=nullptr)return false;
+        i = 1;
+        while(i<4){
+            board[i][0] = board[4][0];
+            board[4][0] = nullptr;
+
+            bool check = Helper::isCheck(*this, Color::WHITE);
+
+            board[4][0] = board[i][0];
+            board[i][0] = nullptr;
+
+            i++;
+            if(check) return false;
+        }        
+    }else{
+        if(!blackQueenSideCasle) return false;
+        if(board[4][7]==nullptr||board[0][7]==nullptr)return false;
+        if(board[4][7]->name != "K" || board[0][7]->name != "R") return false;
+        if(Helper::isCheck(*this, Color::BLACK)) return false;
+        int i = 1;
+        while(i<4) if(board[i++][7]!=nullptr)return false;
+        i = 1;
+        while(i<4){
+            board[i][7] = board[4][7];
+            board[4][7] = nullptr;
+
+            bool check = Helper::isCheck(*this, Color::BLACK);
+
+            board[4][7] = board[i][7];
+            board[i][7] = nullptr;
+
+            i++;
+            if(check) return false;
+        }
+    }
+
+    return true;
+}

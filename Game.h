@@ -9,6 +9,7 @@
 #include "Helper/enum.h"
 #include <chrono>
 #include <iostream>
+#include <map>
 
 using namespace std;
 
@@ -24,6 +25,7 @@ class Game{
     void twoPawnsOn6(Board&);
     void lichessBuzzleMateInThree(Board&);
     void lichessBuzzleMateInThreeWithKnight(Board&);
+    void testFullGame();
 };
 
 void Game::initialBoard(Board& board){
@@ -138,7 +140,7 @@ void Game::lichessBuzzleMateInThreeWithKnight(Board& board){
 
 void Game::startGame(){
     Board board;
-    napilion(board);
+    initialBoard(board);
 
     board.prepareMoves();
     board.printBoard();
@@ -206,5 +208,38 @@ void Game::startGame(){
             cout<<"2 The engine will play black move"<<endl;
             cout<<"3 Play a move manually"<<endl;
         }
+    }
+}
+
+void Game::testFullGame() {
+    Board board;
+    initialBoard(board);
+
+    board.prepareMoves();
+    bool turn = 1;
+    int cnt = 1;
+    map<int, char>mp;
+    mp[0] = 'A';
+    mp[1] = 'B';
+    mp[2] = 'C';
+    mp[3] = 'D';
+    mp[4] = 'E';
+    mp[5] = 'F';
+    mp[6] = 'G';
+    mp[7] = 'H';
+    int x;
+    board.board[3][0] = nullptr;
+    while(cin>>x){
+        auto move = Engine::getMove(board, turn?Color::WHITE:Color::BLACK);
+        
+        cout<<cnt<<" "<<(turn ? "WHITE" : "BLACK")<<" ";
+        cout<<board.board[move.first.first][move.first.second]->name<<" "<<mp[move.first.first]<<move.first.second+1<<" "<<mp[move.second.first.first]<<move.second.first.second+1<<endl;
+        if(move.first.first==-1||Helper::isDraw(board)){cout<<"End"<<endl;return;}
+
+        Helper::playMove(board, move.first, move.second.first, board.board[move.first.first][move.first.second], nullptr);
+        board.printBoard();
+        cnt++;
+        turn = !turn;
+        cout<<Engine::getScore(board)<<endl;
     }
 }

@@ -14,3 +14,8 @@ void King::prepareMoves(Board& board){
         }
     }  
 }
+
+int King::getValue(){
+    if(color == Color::WHITE) return (value + pst[(7-position.second)*8+position.first]);
+    return (value + pst[position.second*8+position.first]);
+}

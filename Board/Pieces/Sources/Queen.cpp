@@ -23,3 +23,8 @@ void Queen::prepareMoves(Board& board){
         moves.push_back(move);
 
 }
+
+int Queen::getValue(){
+    if(color == Color::WHITE) return (value + pst[(7-position.second)*8+position.first]);
+    return (value + pst[position.second*8+position.first]);
+}

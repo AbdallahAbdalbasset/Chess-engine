@@ -31,3 +31,8 @@ void Pawn::prepareMoves(Board& board){
 
     
 }
+
+int Pawn::getValue(){
+    if(color == Color::WHITE) return (value + pst[(7-position.second)*8+position.first]);
+    return (value + pst[position.second*8+position.first]);
+}

@@ -105,7 +105,7 @@ shared_ptr<Piece> Helper::createPawn(Color color, pair<int, int> position){
     shared_ptr<Piece> pawn = make_shared<Pawn>();
     pawn->position = position;
     pawn->name = "P";
-    pawn->value = 1;
+    pawn->value = 100;
     pawn->color = color;
     return pawn;
 }  
@@ -114,7 +114,7 @@ shared_ptr<Piece> Helper::createRook(Color color, pair<int, int> position){
     shared_ptr<Piece> rook = make_shared<Rook>();
     rook->position = position;
     rook->name = "R";
-    rook->value = 5;
+    rook->value = 500;
     rook->color = color;
     return rook;
 }
@@ -123,7 +123,7 @@ shared_ptr<Piece> Helper::createKnight(Color color, pair<int, int> position){
     shared_ptr<Piece> knight = make_shared<Knight>();
     knight->position = position;
     knight->name = "N";
-    knight->value = 3;
+    knight->value = 300;
     knight->color = color;
     return knight;
 }
@@ -132,7 +132,7 @@ shared_ptr<Piece> Helper::createBishop(Color color, pair<int, int> position){
     shared_ptr<Piece> bishop = make_shared<Bishop>();
     bishop->position = position;
     bishop->name = "B";
-    bishop->value = 3;
+    bishop->value = 300;
     bishop->color = color;
     return bishop;
 }
@@ -141,7 +141,7 @@ shared_ptr<Piece> Helper::createQueen(Color color, pair<int, int> position){
     shared_ptr<Piece> queen = make_shared<Queen>();
     queen->position = position;
     queen->name = "Q";
-    queen->value = 9;
+    queen->value = 900;
     queen->color = color;
     return queen;
 }
@@ -198,6 +198,8 @@ bool Helper::isStalemate(vector<pair<pair<int, int>, pair<pair<int, int>, int>>>
 void Helper::generateMoves(Board board, Color color, vector<pair<int, pair<pair<int, int>, pair<int, int>>>>& moves, int& size, int threadsCount, int depth, bool onlyTakes){
     pair<int, pair<pair<int, int>, pair<int, int>>> maxMove;
     maxMove.first = INT_MIN;
+
+    if(isCheck(board, color)) onlyTakes = false;
 
     for(int i = 0;i<8;i++){
         for(int j = 0;j<8;j++){

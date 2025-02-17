@@ -6,8 +6,8 @@
 #include <iostream>
 
 using namespace std;
-int Engine::maxDepth = 6;
-int Engine::threadsCount = 4;
+int Engine::maxDepth = 1;
+int Engine::threadsCount = 1;
 int Engine::maxValidMovesInChess = 1046;
 
 pair<pair<int, int>, pair<pair<int, int>, int>> Engine::searchTakesOnly(Board board, Color color, int alpha, int beta, int depth){
@@ -107,6 +107,7 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
         int col = moves[i].second.first.second;
         pair<int, int> newPosition = moves[i].second.second;
 
+        bool isPawn = board.board[row][col]->name == "P"?true:false;
         // Try this move
         shared_ptr<Piece> fromPiece = board.board[row][col];
         shared_ptr<Piece> toPiece = board.board[newPosition.first][newPosition.second];
@@ -132,6 +133,16 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
             }
         }
                 
+        // Pawn promotion in nearset move
+        if(tempRes.second.second == ret.second.second){            
+            if((color == Color::WHITE && col == 6) || (color == Color::BLACK && col == 1) 
+            && isPawn){
+                ret = tempRes;
+                ret.first = {row, col};
+                ret.second.first = newPosition;
+            }
+        }
+
         // Undo this move
         Helper::playMove(board, newPosition, {row, col}, fromPiece, toPiece);
 
@@ -150,7 +161,7 @@ int Engine::getScore(Board &board){
         for(int col=0;col<8;col++) {
             if(board.board[row][col]==nullptr)continue;
 
-            int value = board.board[row][col]->value;
+            int value = board.board[row][col]->getValue();
             if(board.board[row][col]->color == Color::BLACK) value *= -1;
             score += value;
         }
@@ -190,6 +201,11 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::getMove(Board board, Col
         }
         if(color == Color::BLACK && bestMove.second.second > moves[i].second.second){
             bestMove = moves[i];
+        }
+
+        if(moves[i].first.first != -1 && moves[i] != bestMove && moves[i].second.second == bestMove.second.second){
+            if((color == Color::WHITE && moves[i].first.second == 6) || (color == Color::BLACK && moves[i].first.second == 1) && board.board[moves[i].first.first][moves[i].first.second]->name == "P")
+                bestMove = moves[i];
         }
     }
     

@@ -8,7 +8,7 @@
 
 using namespace std;
 int Engine::maxDepth = 2;
-int Engine::threadsCount = 4;
+int Engine::threadsCount = 1;
 int Engine::maxValidMovesInChess = 1046;
 
 pair<pair<int, int>, pair<pair<int, int>, int>> Engine::searchTakesOnly(Board board, Color color, int alpha, int beta, int depth){

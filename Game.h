@@ -26,6 +26,7 @@ class Game{
     void lichessBuzzleMateInThree(Board&);
     void lichessBuzzleMateInThreeWithKnight(Board&);
     void testFullGame();
+    void ramyGame(Board&);
 };
 
 void Game::initialBoard(Board& board){
@@ -138,9 +139,44 @@ void Game::lichessBuzzleMateInThreeWithKnight(Board& board){
     board.board[6][7] = Helper::createKing(Color::BLACK, {6, 7});
 }
 
+void Game::ramyGame(Board& board){
+    
+    board.whiteKingSideCasle = false;
+    board.blackKingSideCasle = false;
+    board.whiteQueenSideCasle = false;
+    board.blackQueenSideCasle = false;
+
+    board.board[0][1] = Helper::createPawn(Color::WHITE, {0, 1});
+    board.board[1][1] = Helper::createPawn(Color::WHITE, {1, 1});
+    board.board[2][1] = Helper::createPawn(Color::WHITE, {2, 1});
+    board.board[5][1] = Helper::createPawn(Color::WHITE, {5, 1});
+    board.board[4][3] = Helper::createPawn(Color::WHITE, {4, 3});
+
+    board.board[0][6] = Helper::createPawn(Color::BLACK, {0, 6});
+    board.board[1][5] = Helper::createPawn(Color::BLACK, {1, 5});
+    board.board[2][5] = Helper::createPawn(Color::BLACK, {2, 5});
+    board.board[3][5] = Helper::createPawn(Color::BLACK, {3, 5});
+    board.board[4][4] = Helper::createPawn(Color::BLACK, {4, 4});
+    board.board[6][5] = Helper::createPawn(Color::BLACK, {6, 5});
+
+    board.board[3][0] = Helper::createRook(Color::WHITE, {3, 0});
+    board.board[4][0] = Helper::createRook(Color::WHITE, {4, 0});
+
+    board.board[0][7] = Helper::createRook(Color::BLACK, {0, 7});
+    board.board[7][7] = Helper::createRook(Color::BLACK, {7, 7});
+
+    board.board[6][0] = Helper::createKing(Color::WHITE, {6, 0});
+    board.board[3][6] = Helper::createKing(Color::BLACK, {3, 6});
+
+    board.board[3][4] = Helper::createKnight(Color::WHITE, {3, 4});
+    board.board[7][4] = Helper::createKnight(Color::BLACK, {7, 4});
+
+    board.board[6][1] = Helper::createBishop(Color::WHITE, {6, 1});
+
+}
 void Game::startGame(){
     Board board;
-    initialBoard(board);
+    ramyGame(board);
 
     board.prepareMoves();
     board.printBoard();
@@ -173,8 +209,15 @@ void Game::startGame(){
                 auto end = chrono::high_resolution_clock::now();
                 duration = chrono::duration_cast<chrono::microseconds>(end - start);
 
-                if(ret.first.first == -1) {cout<<"StaleMate "<<endl; return; }
-                Helper::playMove(board, board.board[ret.first.first][ret.first.second]->color, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
+                if(ret.second.first.first == -1) {cout<<"StaleMate "<<endl; return; }
+                if(ret.second.first.first == KING_SIDE_CASLE||ret.second.first.first==QUEEN_SIDE_CASLE)
+            Helper::playMove(board,Color::WHITE, ret.first, ret.second.first, nullptr, nullptr);
+        else if(ret.first.first != -1)
+            Helper::playMove(board, Color::WHITE, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
+        else{
+            cout<<"No moves"<<endl;
+            return;
+        }
             }else if(c == 2){// black move
                 cout<<"Calculating..."<<endl;
 
@@ -186,12 +229,19 @@ void Game::startGame(){
                 duration = chrono::duration_cast<chrono::microseconds>(end - start);
 
                 if(ret.first.first == -1) {cout<<"StaleMate "<<endl; return; }
-                Helper::playMove(board, board.board[ret.first.first][ret.first.second]->color, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
+                if(ret.second.first.first == KING_SIDE_CASLE||ret.second.first.first==QUEEN_SIDE_CASLE)
+            Helper::playMove(board,Color::BLACK, ret.first, ret.second.first, nullptr, nullptr);
+        else if(ret.first.first != -1)
+            Helper::playMove(board, Color::BLACK, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
+        else{
+            cout<<"No moves"<<endl;
+            return;
+        }
             }else{// Play a move manually
                 cout<<"Enter the from and to positions: ";
 
                 cin>>from.first>>from.second>>to.first>>to.second;
-                Helper::playMove(board, board.board[ret.first.first][ret.first.second]->color, from, to, board.board[from.first][from.second], nullptr);
+                Helper::playMove(board, board.board[from.first][from.second]->color, from, to, board.board[from.first][from.second], nullptr);
                 ret.second.second = 1;
             }
             board.prepareMoves();

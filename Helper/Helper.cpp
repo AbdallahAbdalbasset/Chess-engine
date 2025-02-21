@@ -337,11 +337,134 @@ bool Helper::isStalemate(vector<pair<pair<int, int>, pair<pair<int, int>, int>>>
     return false;
 }
 
+bool Helper::isBishopOrQueenAttackKing(Board board, Color color, pair<int, int> kingPosition){
+// Bishop and Queen
+    int i = kingPosition.first;
+    int j = kingPosition.second;
+
+    // Up-right
+    string validNames = "BQ";
+    while(Helper::isEmptySquare(board, ++i, ++j));
+    if(isInBoard(i, j)&&haveOpponentPiece(board, color, i, j)&&validNames.find(board.board[i][j]->name)!=string::npos) return true;
+
+    // Down-right
+    i = kingPosition.first;
+    j = kingPosition.second;
+    while(Helper::isEmptySquare(board, ++i, --j));
+    if(isInBoard(i, j)&&haveOpponentPiece(board, color, i, j)&&validNames.find(board.board[i][j]->name)!=string::npos) return true;
+
+    // Up-left
+    i = kingPosition.first;
+    j = kingPosition.second;
+    while(Helper::isEmptySquare(board, --i, ++j));
+    if(isInBoard(i, j)&&haveOpponentPiece(board, color, i, j)&&validNames.find(board.board[i][j]->name)!=string::npos) return true;
+
+
+    // Down-left
+    i = kingPosition.first;
+    j = kingPosition.second;
+    while(Helper::isEmptySquare(board, --i, --j));
+    if(isInBoard(i, j)&&haveOpponentPiece(board, color, i, j)&&validNames.find(board.board[i][j]->name)!=string::npos) return true;
+
+    return false;
+}
+
+bool Helper::isRookOrQueenAttackKing(Board board, Color color, pair<int, int> kingPosition){
+// Bishop and Queen
+    int i = kingPosition.first;
+    int j = kingPosition.second;
+
+    // Up-right
+    string validNames = "RQ";
+    while(Helper::isEmptySquare(board, i, ++j));
+    if(isInBoard(i, j)&&haveOpponentPiece(board, color, i, j)&&validNames.find(board.board[i][j]->name)!=string::npos) return true;
+
+    // Down-right
+    i = kingPosition.first;
+    j = kingPosition.second;
+    while(Helper::isEmptySquare(board, ++i, j));
+    if(isInBoard(i, j)&&haveOpponentPiece(board, color, i, j)&&validNames.find(board.board[i][j]->name)!=string::npos) return true;
+
+    // Up-left
+    i = kingPosition.first;
+    j = kingPosition.second;
+    while(Helper::isEmptySquare(board, --i, j));
+    if(isInBoard(i, j)&&haveOpponentPiece(board, color, i, j)&&validNames.find(board.board[i][j]->name)!=string::npos) return true;
+
+
+    // Down-left
+    i = kingPosition.first;
+    j = kingPosition.second;
+    while(Helper::isEmptySquare(board, i, --j));
+    if(isInBoard(i, j)&&haveOpponentPiece(board, color, i, j)&&validNames.find(board.board[i][j]->name)!=string::npos) return true;
+
+    return false;
+}
+
+bool Helper::isKnightAttackKing(Board board, Color color, pair<int, int> kingPosition){
+    int i = kingPosition.first;
+    int j = kingPosition.second;
+
+    // Up-right
+    if(isInBoard(i+2, j+1)&&haveOpponentPiece(board, color, i+2, j+1)&&board.board[i+2][j+1]->name == "N") return true;
+    // Up-left
+    if(isInBoard(i+2, j-1)&&haveOpponentPiece(board, color, i+2, j-1)&&board.board[i+2][j-1]->name == "N") return true;
+    // Down-right
+    if(isInBoard(i-2, j+1)&&haveOpponentPiece(board, color, i-2, j+1)&&board.board[i-2][j+1]->name == "N") return true;
+    // Down-left
+    if(isInBoard(i-2, j-1)&&haveOpponentPiece(board, color, i-2, j-1)&&board.board[i-2][j-1]->name == "N") return true;
+    // Up
+    if(isInBoard(i+1, j+2)&&haveOpponentPiece(board, color, i+1, j+2)&&board.board[i+1][j+2]->name == "N") return true;
+    // Down
+    if(isInBoard(i-1, j+2)&&haveOpponentPiece(board, color, i-1, j+2)&&board.board[i-1][j+2]->name == "N") return true;
+    // Left
+    if(isInBoard(i+1, j-2)&&haveOpponentPiece(board, color, i+1, j-2)&&board.board[i+1][j-2]->name == "N") return true;
+    // Right
+    if(isInBoard(i-1, j-2)&&haveOpponentPiece(board, color, i-1, j-2)&&board.board[i-1][j-2]->name == "N") return true;
+
+    return false;
+
+}
+
+bool Helper::isPawnAttackKing(Board board, Color color, pair<int, int> kingPosition){
+    int increment = -1;
+    if(color == Color::BLACK)increment = 1;
+    if(haveOpponentPiece(board, color, kingPosition.first + 1, kingPosition.second + increment)&&board.board[kingPosition.first+1][kingPosition.second + increment]->name == "P") return true;
+    if(haveOpponentPiece(board, color, kingPosition.first - 1, kingPosition.second + increment)&&board.board[kingPosition.first-1][kingPosition.second + increment]->name == "P") return true;
+    
+    return false;
+}
+bool Helper::isThisMoveACheck(Board board, Color color, pair<int, int> from, pair<int, int> to, pair<int, int> kingPosition){
+    assert(isInBoard(from.first, from.second)&&isInBoard(to.first, to.second));
+    board.board[to.first][to.second] = board.board[from.first][from.second];
+    board.board[from.first][from.second] = nullptr;
+
+    if(isPawnAttackKing(board, color, kingPosition)) return true;
+    if(isBishopOrQueenAttackKing(board, color, kingPosition)) return true;
+    if(isRookOrQueenAttackKing(board, color, kingPosition)) return true;
+    if(isKnightAttackKing(board, color, kingPosition)) return true;
+
+    return false;
+}
+
 void Helper::generateMoves(Board board, Color color, vector<pair<int, pair<pair<int, int>, pair<int, int>>>>& moves, int& size, int threadsCount, int depth, bool onlyTakes){
     pair<int, pair<pair<int, int>, pair<int, int>>> maxMove;
     maxMove.first = INT_MIN;
 
     if(isCheck(board, color)) onlyTakes = false;
+
+    int total = 0;
+    pair<int, int> whiteKingPosition, blackKingPosition;
+    for(int i = 0;i<8;i++){
+        for(int j = 0 ;j<8;j++){
+            if(board.board[i][j] == nullptr) continue;
+            total += board.board[i][j]->value;
+            if(board.board[i][j]->name == "K"){
+                if(board.board[i][j]->color == Color::WHITE) whiteKingPosition = {i, j};
+                else blackKingPosition = {i, j};
+            }
+        }
+    }
 
     for(int i = 0;i<8;i++){
         for(int j = 0;j<8;j++){
@@ -349,21 +472,32 @@ void Helper::generateMoves(Board board, Color color, vector<pair<int, pair<pair<
             if(board.board[i][j]->color != color) continue;
 
             for(auto newPosition : board.board[i][j]->moves){
+
                 if(!Helper::isValidMove(board, newPosition, color)) continue;
-                if(onlyTakes && board.board[newPosition.first][newPosition.second] == nullptr) continue;
+                bool isCheck = false;
+                if(onlyTakes && depth < 11)
+                    isCheck = isThisMoveACheck(board, (color==Color::WHITE)? Color::BLACK:Color::WHITE, {i, j}, newPosition, (color==Color::WHITE)?blackKingPosition:whiteKingPosition);
+                if(onlyTakes && board.board[newPosition.first][newPosition.second] == nullptr) {
+                    if(!isCheck) continue;
+                }
 
                 moves[size++] = {0, {{i, j}, newPosition}};
 
-                if(board.board[newPosition.first][newPosition.second] == nullptr) continue;
-                moves[size-1].first = max(1, board.board[newPosition.first][newPosition.second]->value + 1 - board.board[i][j]->value);
-                maxMove = max(maxMove, moves[size - 1]);
+                if(board.board[newPosition.first][newPosition.second] == nullptr&&!isCheck) continue;
+                if(!isCheck){
+                    moves[size-1].first = max(1, board.board[newPosition.first][newPosition.second]->value );
+                    maxMove = max(maxMove, moves[size - 1]);
+                }else{
+                    moves[size-1].first = 1000;
+                    maxMove = max(maxMove, moves[size - 1]);
+                }
             }
         }
     }
 
     if(!onlyTakes){
-        if(board.canKingSideCasle(color)) moves[size++] = {2, {{-1, -1}, {KING_SIDE_CASLE, -1}}};
-        if(board.canQueenSideCasle(color)) moves[size++] = {2, {{-1, -1}, {QUEEN_SIDE_CASLE, -1}}};
+        if(board.canKingSideCasle(color)) moves[size++] = {1000, {{-1, -1}, {KING_SIDE_CASLE, -1}}};
+        if(board.canQueenSideCasle(color)) moves[size++] = {1000, {{-1, -1}, {QUEEN_SIDE_CASLE, -1}}};
     }
 
     int temp = threadsCount - 1;
@@ -373,4 +507,10 @@ void Helper::generateMoves(Board board, Color color, vector<pair<int, pair<pair<
 
     sort(moves.begin(), moves.begin()+size, greater<pair<int, pair<pair<int, int>, pair<int, int>>>>());
 
+}
+
+pair<pair<int, int>, pair<int, int>> Helper::decodeMove(string s){
+    if(s == "o-o") return {{-1, -1},{KING_SIDE_CASLE, -1}};
+    if(s == "o-o-o") return {{-1, -1},{QUEEN_SIDE_CASLE, -1}};
+    return {{s[0]-'a',s[1]-'0'-1},{s[2]-'a',s[3]-'0'-1}};
 }

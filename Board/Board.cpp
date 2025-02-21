@@ -56,11 +56,11 @@ void Board::printBoard(){
     cout<<endl<<endl;
 
     cout<<setw(6)<<left<<"";
-    for(int i = 0; i < boardSize; i++)cout<<setw(6)<<left<<i;cout<<endl;
+    for(char i = 'a'; i <= 'h'; i++)cout<<setw(6)<<left<<i;cout<<endl;
     cout<<endl;
 
     for(int i = boardSize - 1;i >= 0; i--){
-        cout<<setw(6)<<i<<left;
+        cout<<setw(6)<<i+1<<left;
         for(int j = 0;j < boardSize; j++){
             if(board[j][i]!=nullptr){
                 string out = ((board[j][i]->color == Color::WHITE) ?  "W" : "B") + board[j][i]->name;
@@ -68,11 +68,11 @@ void Board::printBoard(){
             }else
                 cout << setw(6) << left << "--";
         }
-        cout<<setw(6)<<left<<i<<endl<<endl;
+        cout<<setw(6)<<left<<i+1<<endl<<endl;
     }
 
     cout<<setw(6)<<left<<"";
-    for(int i = 0; i < boardSize; i++)cout<<setw(6)<<left<<i;cout<<endl;
+    for(char i = 'a'; i <= 'h'; i++)cout<<setw(6)<<left<<i;cout<<endl;
 
 }
 

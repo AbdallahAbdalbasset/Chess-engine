@@ -28,5 +28,12 @@ class Helper{
     static void kingSideUncasle(Board& board, Color color);
     static void queenSideCasle(Board& board, Color color);
     static void queenSideUncasle(Board& board, Color color);
+    static pair<pair<int, int>, pair<int, int>> decodeMove(string move);
+    static bool isThisMoveACheck(Board board, Color color, pair<int, int> from, pair<int, int> to, pair<int, int> kingPosition);
+    static bool isBishopOrQueenAttackKing(Board board, Color color, pair<int, int> kingPosition);
+    static bool isRookOrQueenAttackKing(Board board, Color color, pair<int, int> kingPosition);
+    static bool isKnightAttackKing(Board board, Color color, pair<int, int> kingPosition);
+    static bool isPawnAttackKing(Board board, Color color, pair<int, int> kingPosition);
+
 };
 

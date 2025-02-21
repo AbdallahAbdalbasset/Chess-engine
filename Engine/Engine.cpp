@@ -7,7 +7,7 @@
 #include <iostream>
 
 using namespace std;
-int Engine::maxDepth = 4;
+int Engine::maxDepth = 2;
 int Engine::threadsCount = 4;
 int Engine::maxValidMovesInChess = 1046;
 
@@ -26,9 +26,16 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::searchTakesOnly(Board bo
     vector<pair<int, pair<pair<int, int>, pair<int, int>>>> moves(maxValidMovesInChess);
     Helper::generateMoves(board, color, moves, size, threadsCount, depth, true); 
 
+    if(Helper::isCheck(board, color)){
+        if(color == Color::WHITE) ret.second.second = INT_MIN;
+        else ret.second.second = INT_MAX;
+    }
+
     if(color == Color::WHITE) alpha = max(alpha, ret.second.second);
     else beta = min(beta, ret.second.second);
     if(size == 0) return ret;
+
+    
 
     // Divide the moves among threads
     int start = 0;
@@ -121,7 +128,7 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
         
         // Try this move
         Helper::playMove(board, color, {row, col}, newPosition, fromPiece, nullptr);
-        
+
         // Recursively call getMove for the opponent's turn
         auto tempRes = search(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE, depth + 1, alpha, beta, threadId);
                 
@@ -166,14 +173,55 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
 
 int Engine::getScore(Board &board){
     int score=0;
+
+    int whiteMaterial = 0;
+    int blackMaterial = 0;
+    pair<int, int> whiteKingPosition, blackKingPosition;
     for(int row=0;row<8;row++) {
         for(int col=0;col<8;col++) {
             if(board.board[row][col]==nullptr)continue;
 
             int value = board.board[row][col]->getValue();
-            if(board.board[row][col]->color == Color::BLACK) value *= -1;
+            if(board.board[row][col]->color == Color::BLACK) {
+                value *= -1;
+                blackMaterial += board.board[row][col]->value;
+                if(board.board[row][col]->name == "K") blackKingPosition = {row, col};
+            }else{
+                whiteMaterial += board.board[row][col]->value;
+                if(board.board[row][col]->name == "K") whiteKingPosition = {row, col};
+            }
             score += value;
+
+
         }
+    }
+
+    if(!whiteMaterial){
+        int kingValue = min(7 - whiteKingPosition.first, whiteKingPosition.first);
+        kingValue += min(7 - whiteKingPosition.second, whiteKingPosition.second);
+        int dist = abs(whiteKingPosition.first - blackKingPosition.first);
+        dist += abs(whiteKingPosition.second - blackKingPosition.second);
+        kingValue += dist;
+        kingValue = kingValue*800/28;
+
+        if(whiteKingPosition.first == blackKingPosition.first) kingValue += 50;
+        if(whiteKingPosition.second == blackKingPosition.second) kingValue += 50;
+
+        score += kingValue;
+    }
+    if(!blackMaterial){
+        int kingValue = min(7 - blackKingPosition.first, blackKingPosition.first);
+        kingValue += min(7 - blackKingPosition.second, blackKingPosition.second);
+        int dist = abs(whiteKingPosition.first - blackKingPosition.first);
+        dist += abs(whiteKingPosition.second - blackKingPosition.second);
+    
+        kingValue += dist;
+        kingValue = kingValue*800/28;
+        if(whiteKingPosition.first == blackKingPosition.first) kingValue += 50;
+        if(whiteKingPosition.second == blackKingPosition.second) kingValue += 50;
+        
+        kingValue = -kingValue;
+        score += kingValue;
     }
 
     return score;

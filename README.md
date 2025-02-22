@@ -34,8 +34,8 @@ This is a C++ chess game featuring a console-based board and a chess engine powe
   - `1` - The engine plays a White move.
   - `2` - The engine plays a Black move.
   - `3` - Play a Manual move.
-- Enter moves using board coordinates in the format: `fromX fromY toX toY`
-  - Example: `0 1 0 2` moves the piece from `(0,1)` to `(0,2)`.
+- Enter moves using board coordinates:
+  - Example: `d2d4` moves the piece from `d2` to `d4`.
 
 ## Future Improvements
 - Implement an opening book to speed up early-game decisions.

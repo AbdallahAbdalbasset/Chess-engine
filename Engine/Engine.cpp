@@ -7,7 +7,7 @@
 #include <iostream>
 
 using namespace std;
-int Engine::maxDepth = 2;
+int Engine::maxDepth = 4;
 int Engine::threadsCount = 4;
 int Engine::maxValidMovesInChess = 1046;
 
@@ -35,12 +35,8 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::searchTakesOnly(Board bo
     else beta = min(beta, ret.second.second);
     if(size == 0) return ret;
 
-    
-
-    // Divide the moves among threads
     int start = 0;
     int increment = 1;
-
     for(int i = start;i<size;i+=increment){
         int row = moves[i].second.first.first;
         int col = moves[i].second.first.second;

@@ -217,7 +217,7 @@ void Game::mateIn6(Board& board){
 
 void Game::startGame(){
     Board board;
-    mateIn6(board);
+    initialBoard(board);
     board.prepareMoves();
     board.printBoard();
 
@@ -244,7 +244,7 @@ void Game::startGame(){
             int movesCnt = 0;
             while(Engine::maxDepth<6||duration.count()*movesCnt<=100){
                 if(Engine::maxDepth!=2)
-                    cout<<"Calculating..., Depth : "<<Engine::maxDepth<<", Max Expected Time : "<<duration.count()*movesCnt<<" Seconds"<<endl;
+                    cout<<"Calculating..., Depth : "<<Engine::maxDepth<<",Expected Time : "<<duration.count()*movesCnt<<" Seconds"<<endl;
                 
                 int oldDepth = Engine::maxDepth;
                 auto start = chrono::high_resolution_clock::now();
@@ -272,7 +272,7 @@ void Game::startGame(){
             int movesCnt = 0;
             while(Engine::maxDepth<6||duration.count()*movesCnt<=100){
                 if(Engine::maxDepth!=2)
-                    cout<<"Calculating..., Depth : "<<Engine::maxDepth<<", Max Expected Time : "<<duration.count()*movesCnt<<" Seconds"<<endl;
+                    cout<<"Calculating..., Depth : "<<Engine::maxDepth<<",Expected Time : "<<duration.count()*movesCnt<<" Seconds"<<endl;
 
                 int oldDepth = Engine::maxDepth;
                 auto start = chrono::high_resolution_clock::now();
@@ -341,12 +341,9 @@ void Game::testFullGame() {
     mp[5] = 'F';
     mp[6] = 'G';
     mp[7] = 'H';
-    board.board[3][7] = nullptr;
-    int x;
     chrono::duration<double> duration;
     chrono::duration<double> maxi;
     board.printBoard();
-    cin>>x;
     while(1){
         auto start = chrono::high_resolution_clock::now();
         auto move = Engine::getMove(board, turn?Color::WHITE:Color::BLACK);

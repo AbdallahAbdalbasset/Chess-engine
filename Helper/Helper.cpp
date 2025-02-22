@@ -475,7 +475,7 @@ void Helper::generateMoves(Board board, Color color, vector<pair<int, pair<pair<
 
                 if(!Helper::isValidMove(board, newPosition, color)) continue;
                 bool isCheck = false;
-                if(onlyTakes && depth < 11)
+                if(onlyTakes && depth < 6)
                     isCheck = isThisMoveACheck(board, (color==Color::WHITE)? Color::BLACK:Color::WHITE, {i, j}, newPosition, (color==Color::WHITE)?blackKingPosition:whiteKingPosition);
                 if(onlyTakes && board.board[newPosition.first][newPosition.second] == nullptr) {
                     if(!isCheck) continue;

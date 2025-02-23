@@ -3,6 +3,9 @@
 #include "../../Board.h"
 #include "../../../Helper/Helper.h"
 
+Knight::Knight(){
+    moves.reserve(maxPieceMoves);
+}
 void Knight::prepareMoves(Board& board){
     moves.clear();
     int i = position.first;

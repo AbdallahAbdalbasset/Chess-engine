@@ -3,6 +3,10 @@
 #include "../../Board.h"
 #include "../../../Helper/Helper.h"
 
+King::King(){
+    moves.reserve(maxPieceMoves);
+}
+
 void King::prepareMoves(Board& board){
     moves.clear();
     for(int i = position.first - 1;i <= position.first + 1; i++){

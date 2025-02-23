@@ -207,10 +207,8 @@ void Helper::playMove(Board& board, Color color, pair<int, int> from, pair<int, 
         }
     }
     
-    
     board.prepareMoves();
-
-    
+    //board.reprepareMoves(from, to);
 }
 
 void Helper::unPlayMove(Board& board, Color color, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> fromPiece, shared_ptr<Piece> toPiece, vector<bool>& casleData, int threadId){    
@@ -231,6 +229,7 @@ void Helper::unPlayMove(Board& board, Color color, pair<int, int> from, pair<int
     board.blackQueenSideCasle = casleData[3];
 
     dataStore.pop(board, threadId);
+    //board.reprepareMoves(from, to);
 }
 
 bool Helper::isValidMove(Board board, pair<int, int> to, Color color){

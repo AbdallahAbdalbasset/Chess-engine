@@ -4,6 +4,10 @@
 #include "../Headers/Rook.h"
 #include "../Headers/Bishop.h"
 
+
+Queen::Queen(){
+    moves.reserve(maxPieceMoves);
+}
 void Queen::prepareMoves(Board& board){
     moves.clear();
     Rook rook;

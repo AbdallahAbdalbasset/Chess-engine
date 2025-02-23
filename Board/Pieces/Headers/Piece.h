@@ -7,6 +7,7 @@ using namespace std;
 class Board;
 class Piece {
     public:
+    const int maxPieceMoves = 27;
     string name;
     pair<int, int> position;
     int value;

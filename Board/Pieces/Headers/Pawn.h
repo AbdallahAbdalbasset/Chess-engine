@@ -4,6 +4,7 @@
 class Board;
 class Pawn : public Piece{
     public:
+	Pawn();
     vector<int> pst = {
 		0, 0, 0, 0, 0, 0, 0, 0,
 		6, 6, 6, 6, 6, 6, 6, 6,

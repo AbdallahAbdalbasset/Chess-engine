@@ -3,8 +3,12 @@
 #include "../../Board.h"
 #include "../../../Helper/Helper.h"
 
+Bishop::Bishop(){
+    moves.reserve(maxPieceMoves);
+}
 void Bishop::prepareMoves(Board& board){
     moves.clear();
+
     int i = position.first;
     int j = position.second;
 

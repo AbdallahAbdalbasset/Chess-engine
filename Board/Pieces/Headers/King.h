@@ -4,6 +4,7 @@
 class Board;
 class King : public Piece {
     public:
+	King();
     vector<int> pst = {
 		0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0,

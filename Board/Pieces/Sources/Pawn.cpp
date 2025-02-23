@@ -3,6 +3,10 @@
 #include "../../Board.h"
 #include "../../../Helper/Helper.h"
 
+
+Pawn::Pawn(){
+    moves.reserve(maxPieceMoves);
+}
 void Pawn::prepareMoves(Board& board){
     moves.clear();
     int increment = (color == Color::WHITE) ? 1 : -1;

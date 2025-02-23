@@ -77,34 +77,15 @@ void Board::printBoard(){
 }
 
 void Board::prepareMoves(){
-    vector<set<pair<int, int> > > allMoves(2);
-    vector<pair<int, int> > kingsPositions;
 
     for(int i=0; i<8; i++){
         for(int j=0; j<8; j++){
             if(board[i][j]==nullptr) continue;
 
             board[i][j]->prepareMoves(*this);
-            if(board[i][j]->name == "K"){
-                kingsPositions.push_back({i, j});
-            }
-            for(auto& move : board[i][j]->moves){
-                allMoves[board[i][j]->color == Color::WHITE ? 0 : 1].insert(move);
-            }
         }
     }
 
-    for(auto& kingPostion :  kingsPositions){
-        vector<pair<int, int> > kingMoves;
-
-        for(auto&  kingMove : board[kingPostion.first][kingPostion.second]->moves){
-            if(allMoves[board[kingPostion.first][kingPostion.second]->color == Color::WHITE? 1 : 0].find(kingMove)== allMoves[board[kingPostion.first][kingPostion.second]->color == Color::WHITE? 1 : 0].end()){
-                kingMoves.push_back(kingMove);
-            }
-        }
-
-        board[kingPostion.first][kingPostion.second]->moves = kingMoves;
-    }
 }
 
 bool Board::canKingSideCasle(Color color){
@@ -213,4 +194,66 @@ bool Board::canQueenSideCasle(Color color){
     }
 
     return true;
+}
+
+void Board::calcMovesThatToucheThePosition(Board& board, pair<int, int> from){
+
+    string unAffected = "BN";
+    for(int i = from.first+1;i<8;i++){
+        if(board.board[from.first][i] == nullptr || unAffected.find(board.board[from.first][i]->name) == string::npos)continue;
+        board.board[from.first][i]->prepareMoves(*this);
+        break;
+    }
+    for(int i = from.first-1;i>=0;i--){
+        if(board.board[from.first][i] == nullptr || unAffected.find(board.board[from.first][i]->name) == string::npos)continue;
+        board.board[from.first][i]->prepareMoves(*this);
+        break;
+    }
+
+    for(int i = from.second+1;i<8;i++){
+        if(board.board[i][from.second] == nullptr || unAffected.find(board.board[i][from.second]->name) == string::npos)continue;
+        board.board[i][from.second]->prepareMoves(*this);
+        break;
+    }
+    for(int i = from.second-1;i>=0;i--){
+        if(board.board[i][from.second] == nullptr || unAffected.find(board.board[i][from.second]->name) == string::npos)continue;
+        board.board[i][from.second]->prepareMoves(*this);
+        break;
+    }
+
+    unAffected = "NR";
+    int i = from.first+1;
+    int j = from.second+1;
+    while(Helper::isInBoard(i,  j)){
+        if(board.board[i][j] != nullptr && unAffected.find(board.board[i][j]->name) == string::npos) {board.board[i][j]->prepareMoves(*this);break;}
+        i++;j++;
+    }
+
+    i = from.first-1;
+    j = from.second-1;
+    while(Helper::isInBoard(i, j)){
+        if(board.board[i][j] != nullptr && unAffected.find(board.board[i][j]->name) == string::npos) {board.board[i][j]->prepareMoves(*this);break;}
+        i--;j--;
+    }
+
+    i = from.first+1;
+    j = from.second-1;
+    while(Helper::isInBoard(i, j)){
+        if(board.board[i][j] != nullptr && unAffected.find(board.board[i][j]->name) == string::npos) {board.board[i][j]->prepareMoves(*this);break;}
+        i++;j--;
+    }
+
+    i = from.first-1;
+    j = from.second+1;
+    while(Helper::isInBoard(i, j)){
+        if(board.board[i][j] != nullptr && unAffected.find(board.board[i][j]->name) == string::npos) {board.board[i][j]->prepareMoves(*this);break;}
+        i--;j++;
+    }
+
+}
+void Board::reprepareMoves(pair<int, int> from, pair<int, int> to){
+    if(board[from.first][from.second] != nullptr) board[from.first][from.second]->prepareMoves(*this);
+    if(board[to.first][to.second] != nullptr) board[to.first][to.second]->prepareMoves(*this);
+    calcMovesThatToucheThePosition(*this, from);
+    calcMovesThatToucheThePosition(*this, to);
 }

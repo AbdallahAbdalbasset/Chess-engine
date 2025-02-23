@@ -3,6 +3,10 @@
 #include "../../Board.h"
 #include "../../../Helper/Helper.h"
 
+
+Rook::Rook(){
+    moves.reserve(maxPieceMoves);
+}
 void Rook::prepareMoves(Board& board){
     moves.clear();
     int i = position.first;

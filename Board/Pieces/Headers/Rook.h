@@ -4,6 +4,7 @@
 class Baord;
 class Rook : public Piece{
     public:
+	Rook();
     vector<int> pst =  {
 		0, 0, 0, 0, 0, 0, 0, 0,
 		5,10,10,10,10,10,10, 5,

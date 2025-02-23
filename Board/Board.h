@@ -19,5 +19,7 @@ class Board{
     void prepareMoves();
     bool canKingSideCasle(Color);
     bool canQueenSideCasle(Color);
+    void reprepareMoves(pair<int, int> from, pair<int, int> to);
+    void calcMovesThatToucheThePosition(Board& board, pair<int, int> point);
 };
 

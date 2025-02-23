@@ -226,7 +226,7 @@ void Game::takeInNearestMoveTest(Board& board){
 }
 void Game::startGame(){
     Board board;
-    takeInNearestMoveTest(board);
+    initialBoard(board);
     board.prepareMoves();
     board.printBoard();
 
@@ -257,7 +257,6 @@ void Game::startGame(){
                 
                 int oldDepth = Engine::maxDepth;
                 auto start = chrono::high_resolution_clock::now();
-
                 ret = Engine::getMove(board, Color::WHITE);
                 auto end = chrono::high_resolution_clock::now();
                 duration = chrono::duration_cast<chrono::microseconds>(end - start);
@@ -267,6 +266,7 @@ void Game::startGame(){
                 Helper::generateMoves(board, Color::WHITE, moves, whiteSize, 1, 0, 0);
                 movesCnt = max(blackSize, whiteSize);
                 Engine::maxDepth = oldDepth + 2;
+                break;
             }
             if(ret.second.first.first == KING_SIDE_CASLE||ret.second.first.first==QUEEN_SIDE_CASLE)
                 Helper::playMove(board,Color::WHITE, ret.first, ret.second.first, nullptr, nullptr, 100);
@@ -295,6 +295,7 @@ void Game::startGame(){
                 Helper::generateMoves(board, Color::WHITE, moves, whiteSize, 1, 0, 0);
                 movesCnt = max(blackSize, whiteSize);
                 Engine::maxDepth = oldDepth + 2;
+                break;
             }
             if(ret.second.first.first == KING_SIDE_CASLE||ret.second.first.first==QUEEN_SIDE_CASLE)
                  Helper::playMove(board,Color::BLACK, ret.first, ret.second.first, nullptr, nullptr, 100);

@@ -7,18 +7,18 @@
 #include <iostream>
 
 using namespace std;
-int Engine::maxDepth = 2;
+int Engine::maxDepth = 4;
 int Engine::threadsCount = 4;
 int Engine::maxValidMovesInChess = 1046;
 
 pair<pair<int, int>, pair<pair<int, int>, int>> Engine::searchTakesOnly(Board board, Color color, int alpha, int beta, int depth, int threadId){
-    if(Helper::isCheck(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE)){
-        return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? INT_MAX : INT_MIN}};
-    }
+     if(Helper::isCheck(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE)){
+         return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? INT_MAX : INT_MIN}};
+     }
 
-    if(Helper::isCheckMate(board, color, threadId)){
-        return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? INT_MIN+depth : INT_MAX-depth}};
-    }
+     if(Helper::isCheckMate(board, color, threadId)){
+         return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? INT_MIN+depth : INT_MAX-depth}};
+     }
 
     pair<pair<int, int>, pair<pair<int, int>, int>> ret = {{-1,-1}, {{-1, -1}, getScore(board)}};
 

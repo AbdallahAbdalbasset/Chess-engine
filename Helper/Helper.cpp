@@ -9,8 +9,10 @@
 #include "../Board/Pieces/Headers/Queen.h"
 #include "../Board/Pieces/Headers/King.h"
 #include "enum.h"
-
+#include "../Engine/Engine.h"
 using namespace std;
+
+DataStore Helper::dataStore(Engine::threadsCount);
 
 bool Helper::isInBoard(int i, int j){
     return (i>=0 && i<8 && j>=0 && j<8);
@@ -42,7 +44,7 @@ bool Helper::isCheck(Board& board, Color color){
     }
     return false;
 }
-bool Helper::isCheckMate(Board board, Color color){
+bool Helper::isCheckMate(Board board, Color color, int threadId){
     // first get all pieces attack the king 
     // then for each attack looking for piece being set as a block
     if(!isCheck(board, color))return false;
@@ -62,12 +64,12 @@ bool Helper::isCheckMate(Board board, Color color){
                 shared_ptr<Piece> fromPiece = board.board[row][col];
                 shared_ptr<Piece> toPiece = board.board[newPosition.first][newPosition.second];
                 vector<bool> casleData = {board.whiteKingSideCasle, board.whiteQueenSideCasle, board.blackKingSideCasle, board.blackQueenSideCasle};
-                Helper::playMove(board, color, {row, col}, newPosition, fromPiece, nullptr);
+                Helper::playMove(board, color, {row, col}, newPosition, fromPiece, nullptr, threadId);
                                 
                 if(!isCheck(board, color)) isNotcheckMate = true;
 
                 // Undo this move
-                Helper::unPlayMove(board, color, newPosition, {row, col}, fromPiece, toPiece, casleData);
+                Helper::unPlayMove(board, color, newPosition, {row, col}, fromPiece, toPiece, casleData, threadId);
 
                 if(isNotcheckMate) return false;
             }
@@ -167,7 +169,8 @@ void Helper::queenSideUncasle(Board& board, Color color){
     
 }
 
-void Helper::playMove(Board& board, Color color, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> fromPiece, shared_ptr<Piece> toPiece){
+void Helper::playMove(Board& board, Color color, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> fromPiece, shared_ptr<Piece> toPiece, int threadId){
+    dataStore.push(board, threadId);// Save moves
 
     if(to.first == KING_SIDE_CASLE) {kingSideCasle(board, color);}
     else if(to.first == QUEEN_SIDE_CASLE) {queenSideCasle(board, color);}
@@ -203,13 +206,14 @@ void Helper::playMove(Board& board, Color color, pair<int, int> from, pair<int, 
 
         }
     }
-
+    
+    
     board.prepareMoves();
 
     
 }
 
-void Helper::unPlayMove(Board& board, Color color, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> fromPiece, shared_ptr<Piece> toPiece, vector<bool>& casleData){    
+void Helper::unPlayMove(Board& board, Color color, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> fromPiece, shared_ptr<Piece> toPiece, vector<bool>& casleData, int threadId){    
 
     if(from.first == KING_SIDE_CASLE) {kingSideUncasle(board, color);}
     else if(from.first == QUEEN_SIDE_CASLE) {queenSideUncasle(board, color);}
@@ -226,8 +230,7 @@ void Helper::unPlayMove(Board& board, Color color, pair<int, int> from, pair<int
     board.blackKingSideCasle = casleData[2];
     board.blackQueenSideCasle = casleData[3];
 
-    board.prepareMoves();
-
+    dataStore.pop(board, threadId);
 }
 
 bool Helper::isValidMove(Board board, pair<int, int> to, Color color){
@@ -475,7 +478,7 @@ void Helper::generateMoves(Board board, Color color, vector<pair<int, pair<pair<
 
                 if(!Helper::isValidMove(board, newPosition, color)) continue;
                 bool isCheck = false;
-                if(onlyTakes && depth < 6)
+                if(onlyTakes && depth < 8)
                     isCheck = isThisMoveACheck(board, (color==Color::WHITE)? Color::BLACK:Color::WHITE, {i, j}, newPosition, (color==Color::WHITE)?blackKingPosition:whiteKingPosition);
                 if(onlyTakes && board.board[newPosition.first][newPosition.second] == nullptr) {
                     if(!isCheck) continue;
@@ -512,5 +515,5 @@ void Helper::generateMoves(Board board, Color color, vector<pair<int, pair<pair<
 pair<pair<int, int>, pair<int, int>> Helper::decodeMove(string s){
     if(s == "o-o") return {{-1, -1},{KING_SIDE_CASLE, -1}};
     if(s == "o-o-o") return {{-1, -1},{QUEEN_SIDE_CASLE, -1}};
-    return {{s[0]-'a',s[1]-'0'-1},{s[2]-'a',s[3]-'0'-1}};
+    return {{s[0]-'a', s[1]-'0'-1}, {s[2]-'a', s[3]-'0'-1}};
 }

@@ -13,5 +13,5 @@ class Engine{
     static pair<pair<int,int>,pair<pair<int,int>,int>> search(Board board,Color color,int depth, int alpha, int beta, int threadId);
     static void prepareThreadMoves(int threadId, Board board, Color color, pair<pair<int, int>, pair<pair<int, int>, int>>& move);
     static int getScore(Board&);
-    static pair<pair<int,int>,pair<pair<int,int>,int>> searchTakesOnly(Board board, Color color, int alpha, int beta, int depth);
+    static pair<pair<int,int>,pair<pair<int,int>,int>> searchTakesOnly(Board board, Color color, int alpha, int beta, int depth, int threadId);
 };

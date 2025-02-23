@@ -30,6 +30,7 @@ class Game{
     void myGame(Board&);
     void myGameMateInThree(Board&);
     void mateIn6(Board&);
+    void takeInNearestMoveTest(Board&);
 };
 
 void Game::initialBoard(Board& board){
@@ -215,9 +216,17 @@ void Game::mateIn6(Board& board){
     board.board[3][7] = Helper::createKing(Color::BLACK, {3, 7});
 }
 
+void Game::takeInNearestMoveTest(Board& board){
+    board.board[6][7] = Helper::createKing(Color::BLACK, {6, 7});
+    board.board[0][5] = Helper::createPawn(Color::BLACK, {0, 5});
+    board.board[1][4] = Helper::createQueen(Color::BLACK, {1, 4});
+    board.board[0][0] = Helper::createKing(Color::WHITE, {0, 0});
+    board.board[0][4] = Helper::createPawn(Color::WHITE, {0, 4});
+
+}
 void Game::startGame(){
     Board board;
-    initialBoard(board);
+    takeInNearestMoveTest(board);
     board.prepareMoves();
     board.printBoard();
 
@@ -260,9 +269,9 @@ void Game::startGame(){
                 Engine::maxDepth = oldDepth + 2;
             }
             if(ret.second.first.first == KING_SIDE_CASLE||ret.second.first.first==QUEEN_SIDE_CASLE)
-                Helper::playMove(board,Color::WHITE, ret.first, ret.second.first, nullptr, nullptr);
+                Helper::playMove(board,Color::WHITE, ret.first, ret.second.first, nullptr, nullptr, 100);
             else if(ret.first.first != -1)
-                Helper::playMove(board, Color::WHITE, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
+                Helper::playMove(board, Color::WHITE, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr, 100);
             else{
                 cout<<"StaleMate"<<endl;
                 return;
@@ -288,9 +297,9 @@ void Game::startGame(){
                 Engine::maxDepth = oldDepth + 2;
             }
             if(ret.second.first.first == KING_SIDE_CASLE||ret.second.first.first==QUEEN_SIDE_CASLE)
-                 Helper::playMove(board,Color::BLACK, ret.first, ret.second.first, nullptr, nullptr);
+                 Helper::playMove(board,Color::BLACK, ret.first, ret.second.first, nullptr, nullptr, 100);
             else if(ret.first.first != -1)
-                Helper::playMove(board, Color::BLACK, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr);
+                Helper::playMove(board, Color::BLACK, ret.first, ret.second.first, board.board[ret.first.first][ret.first.second], nullptr, 100);
             else{
                 cout<<"No moves"<<endl;
                 return;
@@ -305,7 +314,7 @@ void Game::startGame(){
             to = move.second;
                 
 
-            Helper::playMove(board, board.board[from.first][from.second]->color, from, to, board.board[from.first][from.second], nullptr);
+            Helper::playMove(board, board.board[from.first][from.second]->color, from, to, board.board[from.first][from.second], nullptr, 100);
             ret.second.second = 1;
         }
         board.prepareMoves();
@@ -353,11 +362,11 @@ void Game::testFullGame() {
         if(cur.count() > maxi.count()) maxi = cur;
         
         if(move.second.first.first == KING_SIDE_CASLE||move.second.first.first==QUEEN_SIDE_CASLE)
-            Helper::playMove(board,turn?Color::WHITE:Color::BLACK, move.first, move.second.first, nullptr, nullptr);
+            Helper::playMove(board,turn?Color::WHITE:Color::BLACK, move.first, move.second.first, nullptr, nullptr, 100);
         else if(move.first.first != -1)
-            Helper::playMove(board, turn?Color::WHITE:Color::BLACK, move.first, move.second.first, board.board[move.first.first][move.first.second], nullptr);
+            Helper::playMove(board, turn?Color::WHITE:Color::BLACK, move.first, move.second.first, board.board[move.first.first][move.first.second], nullptr, 100);
         else{
-            cout<<"StaleMate"<<endl;
+            cout<<"The end"<<endl;
             return;
         }
         board.printBoard();

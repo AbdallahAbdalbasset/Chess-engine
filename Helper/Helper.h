@@ -2,17 +2,19 @@
 #include  "../Board/Board.h"
 #include "../Board/Pieces/Headers/Piece.h"
 #include "enum.h"
+#include "DataStore.h"
 
 
 class Helper{
     public:
+    static DataStore dataStore;
     static bool isInBoard(int i, int j);
     static bool isEmptySquare(Board& board, int i, int j);
     static bool haveOpponentPiece(Board& board, Color color, int i, int j);
     static bool isCheck(Board& board,Color color);
-    static bool isCheckMate(Board board, Color color);
-    static void playMove(Board& board, Color, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> curPiece, shared_ptr<Piece> targetPiece);
-    static void unPlayMove(Board& board, Color, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> curPiece, shared_ptr<Piece> targetPiece, vector<bool>& casleData);
+    static bool isCheckMate(Board board, Color color, int threadId);
+    static void playMove(Board& board, Color, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> curPiece, shared_ptr<Piece> targetPiece, int threadId);
+    static void unPlayMove(Board& board, Color, pair<int, int> from, pair<int, int> to, shared_ptr<Piece> curPiece, shared_ptr<Piece> targetPiece, vector<bool>& casleData, int threadId);
     static bool isValidMove(Board board, pair<int, int> to, Color color);
     static shared_ptr<Piece> createPawn(Color color, pair<int, int> position);
     static shared_ptr<Piece> createRook(Color color, pair<int, int> position);

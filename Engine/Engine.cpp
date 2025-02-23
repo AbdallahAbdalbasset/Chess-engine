@@ -7,16 +7,16 @@
 #include <iostream>
 
 using namespace std;
-int Engine::maxDepth = 4;
+int Engine::maxDepth = 2;
 int Engine::threadsCount = 4;
 int Engine::maxValidMovesInChess = 1046;
 
-pair<pair<int, int>, pair<pair<int, int>, int>> Engine::searchTakesOnly(Board board, Color color, int alpha, int beta, int depth){
+pair<pair<int, int>, pair<pair<int, int>, int>> Engine::searchTakesOnly(Board board, Color color, int alpha, int beta, int depth, int threadId){
     if(Helper::isCheck(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE)){
         return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? INT_MAX : INT_MIN}};
     }
 
-    if(Helper::isCheckMate(board, color)){
+    if(Helper::isCheckMate(board, color, threadId)){
         return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? INT_MIN+depth : INT_MAX-depth}};
     }
 
@@ -46,10 +46,10 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::searchTakesOnly(Board bo
         shared_ptr<Piece> fromPiece = board.board[row][col];
         shared_ptr<Piece> toPiece = board.board[newPosition.first][newPosition.second];
         vector<bool> casleData = {board.whiteKingSideCasle, board.whiteQueenSideCasle, board.blackKingSideCasle, board.blackQueenSideCasle};
-        Helper::playMove(board, color, {row, col}, newPosition, fromPiece, nullptr);
+        Helper::playMove(board, color, {row, col}, newPosition, fromPiece, nullptr, threadId);
         
         // Recursively call getMove for the opponent's turn
-        auto tempRes = searchTakesOnly(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE, alpha, beta, depth+1);
+        auto tempRes = searchTakesOnly(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE, alpha, beta, depth+1, threadId);
                 
         // Min-Max with Alpha-Beta pruning
         if(color == Color::WHITE){
@@ -69,7 +69,7 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::searchTakesOnly(Board bo
         }
                 
         // Undo this move
-        Helper::unPlayMove(board, color, newPosition, {row, col}, fromPiece, toPiece, casleData);
+        Helper::unPlayMove(board, color, newPosition, {row, col}, fromPiece, toPiece, casleData, threadId);
 
         if(beta <= alpha) return ret;
     }
@@ -83,12 +83,12 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
         return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? INT_MAX : INT_MIN}};
     }
 
-    if(Helper::isCheckMate(board, color)){
+    if(Helper::isCheckMate(board, color, threadId)){
         return {{-1, -1}, {{-1, -1}, color == Color::WHITE ? INT_MIN+depth : INT_MAX-depth}};
     }
 
     if(depth == maxDepth){
-        return searchTakesOnly(board, color, alpha, beta, depth+1);
+        return searchTakesOnly(board, color, alpha, beta, depth+1, threadId);
     }
 
     pair<pair<int, int>, pair<pair<int, int>, int>> ret = {{-1,-1}, {{-1, -1}, INT_MAX}};
@@ -123,7 +123,7 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
         }
         
         // Try this move
-        Helper::playMove(board, color, {row, col}, newPosition, fromPiece, nullptr);
+        Helper::playMove(board, color, {row, col}, newPosition, fromPiece, nullptr, threadId);
 
         // Recursively call getMove for the opponent's turn
         auto tempRes = search(board, (color == Color::WHITE) ? Color::BLACK : Color::WHITE, depth + 1, alpha, beta, threadId);
@@ -156,7 +156,7 @@ pair<pair<int, int>, pair<pair<int, int>, int>> Engine::search(Board board, Colo
         }
 
         // Undo this move
-        Helper::unPlayMove(board, color, newPosition, {row, col}, fromPiece, toPiece, casleData);
+        Helper::unPlayMove(board, color, newPosition, {row, col}, fromPiece, toPiece, casleData, threadId);
 
         if(beta <= alpha) return ret;
     }
@@ -192,7 +192,7 @@ int Engine::getScore(Board &board){
         }
     }
 
-    if(!whiteMaterial){
+    if(blackMaterial-whiteMaterial > 500){
         int kingValue = min(7 - whiteKingPosition.first, whiteKingPosition.first);
         kingValue += min(7 - whiteKingPosition.second, whiteKingPosition.second);
         int dist = abs(whiteKingPosition.first - blackKingPosition.first);
@@ -205,7 +205,7 @@ int Engine::getScore(Board &board){
 
         score += kingValue;
     }
-    if(!blackMaterial){
+    if(whiteMaterial-blackMaterial > 500){
         int kingValue = min(7 - blackKingPosition.first, blackKingPosition.first);
         kingValue += min(7 - blackKingPosition.second, blackKingPosition.second);
         int dist = abs(whiteKingPosition.first - blackKingPosition.first);

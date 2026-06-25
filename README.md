@@ -1,4 +1,4 @@
-# Chess Game with Engine
+# Chess Engine
 
 This is a C++ chess game featuring a console-based board and a chess engine powered by the Minimax algorithm with Alpha-Beta pruning.
 
